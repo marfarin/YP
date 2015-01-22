@@ -6,8 +6,9 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
-use app\models\LoginForm;
-use app\models\ContactForm;
+//use app\models\LoginForm;
+//use app\models\ContactForm;
+use app\models\LoginUserForm;
 
 class SiteController extends Controller
 {
@@ -58,7 +59,8 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        $model = new LoginForm();
+        $model = new LoginUserForm();
+        //var_dump($model);
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         } else {
@@ -75,7 +77,7 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-    public function actionContact()
+    /*public function actionContact()
     {
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
@@ -87,7 +89,7 @@ class SiteController extends Controller
                 'model' => $model,
             ]);
         }
-    }
+    }*/
 
     public function actionAbout()
     {

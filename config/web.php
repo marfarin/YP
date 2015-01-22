@@ -15,7 +15,7 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
+            'identityClass' => 'app\models\UserLogin',
             'enableAutoLogin' => true,
         ],
         'errorHandler' => [
@@ -37,7 +37,23 @@ $config = [
                 ],
             ],
         ],
-        'db' => require(__DIR__ . '/db.php'),
+        'mongodb' => require(__DIR__ . '/db.php'),
+        'urlManager' => [
+                'enablePrettyUrl' => true,
+                'showScriptName' => false,
+                //'enableStrictParsing' => true,
+                //'baseUrl' => 'site/index',
+                'rules' => [
+                    ''=>'site/index',
+                    'users'=>'users/index',
+                    'category'=>'category/index',
+                    //'debug/<controller>/<action>' => 'debug/<controller>/<action>',
+
+                ],
+            ],
+        'authManager' => [
+            'class' => 'yii\rbac\PhpManager',
+        ],
     ],
     'params' => $params,
 ];
@@ -48,7 +64,15 @@ if (YII_ENV_DEV) {
     $config['modules']['debug'] = 'yii\debug\Module';
 
     $config['bootstrap'][] = 'gii';
-    $config['modules']['gii'] = 'yii\gii\Module';
+    $config['modules']['gii'] = [ 'class' => 'yii\gii\Module',
+        'allowedIPs' => ['127.0.0.1',],
+        'generators' => [
+            'mongoDbModel' => [
+            'class' => 'yii\mongodb\gii\model\Generator'
+            ]
+        ],
+    
+    ];
 }
 
 return $config;
