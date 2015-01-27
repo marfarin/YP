@@ -36,17 +36,19 @@ AppAsset::register($this);
             echo Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'items' => [
-                    ['label' => 'Home', 'url' => ['/']],
-                    ['label' => 'Users', 'url' => ['/users']],
-                    ['label' => 'Categories', 'url' => ['/category']],
+                    ['label' => 'Домой', 'url' => ['/']],
+                    ['label' => 'Пользователи', 'url' => ['/users']],
+                    ['label' => 'Категории', 'url' => ['/category']],
+                    ['label' => 'Компании', 'url' => ['/company']],
                     Yii::$app->user->isGuest ?
-                        ['label' => 'Login', 'url' => ['/site/login']] :
-                        ['label' => 'Logout (' . Yii::$app->user->identity->login . ')',
+                        ['label' => 'Войти', 'url' => ['/site/login']] :
+                        ['label' => 'Выйти (' . Yii::$app->user->identity->name . ')',
                             'url' => ['/site/logout'],
                             'linkOptions' => ['data-method' => 'post']],
                 ],
             ]);
             NavBar::end();
+            
         ?>
 
         <div class="container">

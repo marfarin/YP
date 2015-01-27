@@ -15,7 +15,7 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\UserLogin',
+            'identityClass' => 'app\models\Users',
             'enableAutoLogin' => true,
         ],
         'errorHandler' => [
@@ -47,6 +47,7 @@ $config = [
                     ''=>'site/index',
                     'users'=>'users/index',
                     'category'=>'category/index',
+                    'company'=>'company/index',
                     //'debug/<controller>/<action>' => 'debug/<controller>/<action>',
 
                 ],

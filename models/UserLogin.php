@@ -9,7 +9,7 @@
 namespace app\models;
 
 use Yii;
-use yii\mongodb\ActiveRecord;
+//use yii\mongodb\ActiveRecord;
 use app\models\Users;
 use yii\base\NotSupportedException;
 /**

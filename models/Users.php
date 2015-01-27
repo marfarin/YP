@@ -14,7 +14,7 @@ use yii\mongodb\ActiveRecord;
  * @property mixed $password
  * @property mixed $role
  */
-class Users extends \yii\mongodb\ActiveRecord
+class Users extends \yii\mongodb\ActiveRecord implements \yii\web\IdentityInterface
 {
     const ROLE_ROOT   = 'root';
     const ROLE_ADMIN  = 'admin';
@@ -22,7 +22,7 @@ class Users extends \yii\mongodb\ActiveRecord
     const ROLE_USER   = 'user';
     const ROLE_BANNED = 'banned';
     
-    
+    public $authKey;
     /**
      * @inheritdoc
      */
@@ -80,6 +80,50 @@ class Users extends \yii\mongodb\ActiveRecord
             'login' => 'Логин',
             'password' => 'Пароль',
             'role' => 'Роль',
+        ];
+    }
+    
+    public static function findIdentity($identificator)
+    {
+        return self::findOne(['_id' => $identificator]);
+    }
+    
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+    }
+    
+    public static function findByUsername($username)
+    {
+        return self::findOne(['login' => $username]);
+    }
+    
+    public function getId()
+    {
+        return $this->getPrimaryKey();
+    }
+    
+    public function getAuthKey()
+    {
+        return $this->authKey;
+    }
+    
+    public function validateAuthKey($authKey)
+    {
+        return $this->getAuthKey() === $authKey;
+    }
+    
+    public function validatingPassword($password)
+    {
+        //var_dump($password);
+        return $this->password === md5($password);
+        
+    }
+    
+    public function relations()
+    {
+        return [
+            'objects' => array(self::HAS_MANY, 'Objects', 'user_id'),
         ];
     }
 }

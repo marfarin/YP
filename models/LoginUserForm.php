@@ -71,9 +71,21 @@ class LoginUserForm extends Model
     public function getUser()
     {
         if ($this->_user === false) {
-            $this->_user = UserLogin::findByUsername($this->login);
+            $this->_user = Users::findByUsername($this->login);
         }
 
         return $this->_user;
+    }
+    
+    public function attributeLabels()
+    {
+        return [
+            '_id' => 'ID',
+            'name' => 'Имя',
+            'login' => 'Логин',
+            'password' => 'Пароль',
+            'role' => 'Роль',
+            'rememberMe' => 'Запомнить меня',
+        ];
     }
 }

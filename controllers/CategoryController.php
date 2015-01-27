@@ -118,4 +118,28 @@ class CategoryController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+    
+    public function actionTest($parentId, $page = 1, $pageSize = 100)
+    {
+        echo Categories::initJsonTree($parentId, $page, $pageSize);
+    }
+    
+    public function actionTree()
+    {
+        //$model = new CategorySearch();
+        //$model->unsetAttributes();  // clear any default values
+        //if(isset($_GET['Rubric']))
+            //$model->attributes=$_GET['Rubric'];
+        //$this->render('tree',array(
+            //'model'=>$model,
+        //));
+        
+        $searchModel = new CategorySearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('tree', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
 }

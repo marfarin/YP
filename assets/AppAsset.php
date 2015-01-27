@@ -21,6 +21,10 @@ class AppAsset extends AssetBundle
         'css/site.css',
     ];
     public $js = [
+        'js/jstree/_lib/jquery.cookie.js',
+        'js/jstree/_lib/jquery.hotkeys.js',
+        'js/jstree/jquery.jstree.js',
+        'js/jstree/rubricsTree.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',
