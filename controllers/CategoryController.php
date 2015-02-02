@@ -8,6 +8,7 @@ use app\models\CategorySearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * CategoryController implements the CRUD actions for Categories model.
@@ -23,6 +24,28 @@ class CategoryController extends Controller
                     'delete' => ['post'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                
+                'rules' => [
+                    //'class'=>  'app\rbac\rules',
+                    [
+                        'actions' => ['index','view', 'tree', 'test', 'AjaxSearch', 'update'],
+                        'allow' => true,
+                        'roles' => ['@','?'],
+                    ],
+                    [
+                        'actions' => ['create'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['admin, delete'],
+                        'allow' => true,
+                        'roles' => ['moderator'],
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -34,7 +57,8 @@ class CategoryController extends Controller
     {
         $searchModel = new CategorySearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        //var_dump($dataProvider);
+        //var_dump($searchModel);
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -126,14 +150,6 @@ class CategoryController extends Controller
     
     public function actionTree()
     {
-        //$model = new CategorySearch();
-        //$model->unsetAttributes();  // clear any default values
-        //if(isset($_GET['Rubric']))
-            //$model->attributes=$_GET['Rubric'];
-        //$this->render('tree',array(
-            //'model'=>$model,
-        //));
-        
         $searchModel = new CategorySearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 

@@ -23,6 +23,28 @@ class CompanyController extends Controller
                     'delete' => ['post'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                
+                'rules' => [
+                    //'class'=>  'app\rbac\rules',
+                    [
+                        'actions' => ['index','view', 'autocomplete'],
+                        'allow' => true,
+                        'roles' => ['@','?'],
+                    ],
+                    [
+                        'actions' => ['create', 'update'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['admin, delete'],
+                        'allow' => true,
+                        'roles' => ['moderator'],
+                    ],
+                ],
+            ],
         ];
     }
 

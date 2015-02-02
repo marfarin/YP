@@ -9,6 +9,7 @@ use yii\grid\GridView;
 
 $this->title = Yii::t('app', 'Companies');
 $this->params['breadcrumbs'][] = $this->title;
+//var_dump($dataProvider);
 ?>
 <div class="company-index">
 
@@ -53,9 +54,14 @@ $this->params['breadcrumbs'][] = $this->title;
             'export_to_yandex',
             'postcode',
             'type',
-            //'parentID',
-            //'branchParentID',
-
+            [
+                'attribute' => 'category',
+                'value'=>'category.name'
+            ],
+            [
+                'attribute' => 'user',
+                'value'=>'user.name'
+            ],
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); 

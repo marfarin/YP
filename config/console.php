@@ -1,6 +1,6 @@
 <?php
 
-Yii::setAlias('@tests', dirname(__DIR__) . '/tests');
+//Yii::setAlias('@tests', dirname(__DIR__) . '/tests');
 
 $params = require(__DIR__ . '/params.php');
 $db = require(__DIR__ . '/db.php');
@@ -14,9 +14,7 @@ return [
         'gii' => 'yii\gii\Module',
     ],
     'components' => [
-        'cache' => [
-            'class' => 'yii\caching\FileCache',
-        ],
+
         'log' => [
             'targets' => [
                 [
@@ -24,6 +22,13 @@ return [
                     'levels' => ['error', 'warning'],
                 ],
             ],
+        ],
+        'authManager' => [
+            'class' => 'yii\rbac\PhpManager',
+            'defaultRoles' => ['admin', 'moderator', 'user'],
+            'itemFile' => '@app/rbac/items.php',
+            'assignmentFile' => '@app/rbac/assignments.php',
+            'ruleFile' => '@app/rbac/rules.php'
         ],
         'db' => $db,
     ],

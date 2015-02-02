@@ -32,6 +32,7 @@ class Categories extends \yii\mongodb\ActiveRecord
             'name',
             'type',
             'parentID',
+            'tbl_category.name',
         ];
     }
 
@@ -52,9 +53,10 @@ class Categories extends \yii\mongodb\ActiveRecord
     {
         return [
             '_id' => 'ID',
-            'name' => 'Name',
-            'type' => 'Type',
-            'parentID' => 'Parent ID',
+            'name' => 'Название',
+            'type' => 'Тип',
+            'parentID' => 'ID предка',
+            'tbl_category.name' => 'ИМЯ ПРЕДКА',
         ];
     }
     
@@ -114,5 +116,15 @@ class Categories extends \yii\mongodb\ActiveRecord
         }*/
         //var_dump($children);
         return json_encode($children);
+    }
+    
+    public function getCategory()
+    {
+        return $this->hasOne(self::className(), ['_id' => 'parentID']);
+    }
+    
+    public function getCompany()
+    {
+        return $this->hasMany(Company::className(), ['parentID'=>'_id']);
     }
 }

@@ -14,11 +14,16 @@ class CategorySearch extends Categories
 {
     /**
      * @inheritdoc
+     * 
+     * 
      */
+    
+    public $category;
+    
     public function rules()
     {
         return [
-            [['_id', 'name', 'type', 'parentID'], 'safe'],
+            [['_id', 'name', 'type', 'parentID', 'category'], 'safe'],
         ];
     }
 
@@ -40,8 +45,8 @@ class CategorySearch extends Categories
      */
     public function search($params)
     {
-        $query = Categories::find();
-
+        $query = Categories::find()->with('category');
+        //var_dump($query);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -57,8 +62,10 @@ class CategorySearch extends Categories
         $query->andFilterWhere(['like', '_id', $this->_id])
             ->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'type', $this->type])
-            ->andFilterWhere(['like', 'parentID', $this->parentID]);
-
+            ->andFilterWhere(['like', 'parentID', $this->parentID])
+            ->andFilterWhere(['like', 'name', $this->name]);
+        
+            //var_dump($dataProvider);
         return $dataProvider;
     }
 }

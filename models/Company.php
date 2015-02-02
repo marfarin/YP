@@ -76,6 +76,8 @@ class Company extends \yii\mongodb\ActiveRecord
             'type',
             'parentID',
             'branchParentID',
+            'tbl_category.name',
+            'tbl_user.name',
         ];
     }
 
@@ -121,6 +123,18 @@ class Company extends \yii\mongodb\ActiveRecord
             'type' => Yii::t('app', 'Type'),
             'parentID' => Yii::t('app', 'Parent ID'),
             'branchParentID' => Yii::t('app', 'Branch Parent ID'),
+            'tbl_category.name' => Yii::t('app', 'Branch Parent ID'),
+            'tbl_user.name' => Yii::t('app', 'Branch Parent ID'),
         ];
+    }
+    
+    public function getCategory()
+    {
+        return $this->hasMany(Categories::className(), ['_id'=>'parentID']);
+    }
+    
+    public function getUser()
+    {
+        return $this->hasOne(Users::className(), ['_id'=>'user_id']);
     }
 }

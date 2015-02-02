@@ -17,5 +17,6 @@ $this->title = 'Желтые страницы';
         ['label' => 'Login', 'url' => ['site/login'], 'visible' => Yii::$app->user->isGuest],
     ],
 ]);
-    var_dump(Yii::$app->user->identity); ?>
+    var_dump(Yii::$app->user->identity);
+    //var_dump(Yii::$app->user->identity->role); ?>
 </div>

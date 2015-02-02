@@ -14,14 +14,14 @@ use yii\mongodb\ActiveRecord;
  * @property mixed $password
  * @property mixed $role
  */
-class Users extends \yii\mongodb\ActiveRecord implements \yii\web\IdentityInterface
+class Users extends ActiveRecord implements \yii\web\IdentityInterface
 {
     const ROLE_ROOT   = 'root';
     const ROLE_ADMIN  = 'admin';
     const ROLE_MODER  = 'moderator';
     const ROLE_USER   = 'user';
     const ROLE_BANNED = 'banned';
-    
+        
     public $authKey;
     /**
      * @inheritdoc
@@ -100,7 +100,7 @@ class Users extends \yii\mongodb\ActiveRecord implements \yii\web\IdentityInterf
     
     public function getId()
     {
-        return $this->getPrimaryKey();
+        return (string)$this->getPrimaryKey();
     }
     
     public function getAuthKey()
@@ -119,11 +119,10 @@ class Users extends \yii\mongodb\ActiveRecord implements \yii\web\IdentityInterf
         return $this->password === md5($password);
         
     }
-    
-    public function relations()
+      
+    public static function getRoles()
     {
-        return [
-            'objects' => array(self::HAS_MANY, 'Objects', 'user_id'),
-        ];
+        return self::find()->asArray()->all();
     }
+    
 }

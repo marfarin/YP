@@ -3,11 +3,14 @@
 namespace app\controllers;
 
 use Yii;
+use yii\filters\AccessControl;
 use app\models\Users;
 use app\models\UsersSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+
+//use yii\web\ForbiddenHttpException;
 
 /**
  * UsersController implements the CRUD actions for Users model.
@@ -21,6 +24,18 @@ class UsersController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['post'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::className(),
+                
+                'rules' => [
+                    //'class'=>  'app\rbac\rules',
+                    [
+                        //'actions' => ['index', 'view'],
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ],
                 ],
             ],
         ];
@@ -70,6 +85,17 @@ class UsersController extends Controller
             ]);
         }
     }
+    
+    /*public function beforeAction($action)
+    {
+        //var_dump($action);
+        //var_dump(Yii::$app->user);
+        if (!\Yii::$app->user->can($action->id)) {
+               throw new ForbiddenHttpException('Access denied');
+        }
+        return true;
+
+    }*/
 
     /**
      * Updates an existing Users model.

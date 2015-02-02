@@ -18,7 +18,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'password')->passwordInput() ?>
 
-    <?= $form->field($model, 'role') ?>
+    <?= //var_dump($model->roles);
+        $form->field($model, 'role')//->dropDownList($model->role) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

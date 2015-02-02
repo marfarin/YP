@@ -15,10 +15,13 @@ class CompanySearch extends Company
     /**
      * @inheritdoc
      */
+    public $category;
+    public $user;
+    
     public function rules()
     {
         return [
-            [['_id', 'name', 'legal_form', 'legal_name', 'sphere', 'company_size', 'address_id', 'address_addition', 'phone_numbers', 'short_phone_numbers', 'hr_phone_numbers', 'fax_numbers', 'email', 'url', 'working_time', 'update_time', 'user_id', 'branch_name', 'description', 'status', 'wants_placement', 'export_to_yandex', 'postcode', 'type', 'parentID', 'branchParentID'], 'safe'],
+            [['_id', 'name', 'legal_form', 'legal_name', 'sphere', 'company_size', 'address_id', 'address_addition', 'phone_numbers', 'short_phone_numbers', 'hr_phone_numbers', 'fax_numbers', 'email', 'url', 'working_time', 'update_time', 'user_id', 'branch_name', 'description', 'status', 'wants_placement', 'export_to_yandex', 'postcode', 'type', 'parentID', 'branchParentID','category', 'user'], 'safe'],
         ];
     }
 
@@ -40,7 +43,7 @@ class CompanySearch extends Company
      */
     public function search($params)
     {
-        $query = Company::find();
+        $query = Company::find()->with('user')->with('category');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -79,8 +82,12 @@ class CompanySearch extends Company
             ->andFilterWhere(['like', 'postcode', $this->postcode])
             ->andFilterWhere(['like', 'type', $this->type])
             ->andFilterWhere(['like', 'parentID', $this->parentID])
-            ->andFilterWhere(['like', 'branchParentID', $this->branchParentID]);
+            ->andFilterWhere(['like', 'branchParentID', $this->branchParentID])
+            ->andFilterWhere(['like', 'category.name', $this->category])
+            ->andFilterWhere(['like', 'user.name', $this->user]);
 
         return $dataProvider;
     }
+    
+
 }

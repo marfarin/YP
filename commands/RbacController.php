@@ -11,6 +11,9 @@ namespace app\commands;
 use Yii;
 use yii\console\Controller;
 
+
+use app\rbac\UserGroupRule;
+
 /**
  * Description of RbacController
  *
@@ -20,61 +23,41 @@ class RbacController extends Controller
 {
     public function actionInit()
     {
-        $authManager = Yii::$app->authManager;
-
-        $guest  = $authManager->createRole('guest');
-        $user  = $authManager->createRole('user');
-        $moderator = $authManager->createRole('moderator');
-        $admin  = $authManager->createRole('admin');
-        $root = $authManager->createRole('root');
-        $banned = $authManager->createRole('banned');
-        
-        $login  = $authManager->createPermission('login');
-        $logout = $authManager->createPermission('logout');
-        $error  = $authManager->createPermission('error');
-        $signUp = $authManager->createPermission('sign-up');
-        $index  = $authManager->createPermission('index');
-        $view   = $authManager->createPermission('view');
-        $update = $authManager->createPermission('update');
-        $delete = $authManager->createPermission('delete');
-        
-        $authManager->add($login);
-        $authManager->add($logout);
-        $authManager->add($error);
-        $authManager->add($signUp);
-        $authManager->add($index);
-        $authManager->add($view);
-        $authManager->add($update);
-        $authManager->add($delete);
-        
-        $userGroupRule = new UserGroupRule();
-        $authManager->add($userGroupRule);
-        
-        $guest->ruleName  = $userGroupRule->name;
-        $user->ruleName  = $userGroupRule->name;
-        $moderator->ruleName = $userGroupRule->name;
-        $root->ruleName  = $userGroupRule->name;
-        $banned->ruleName  = $userGroupRule->name;
-        $admin->ruleName  = $userGroupRule->name;
-        
-        $authManager->addChild($guest, $login);
-        $authManager->addChild($guest, $logout);
-        $authManager->addChild($guest, $error);
-        $authManager->addChild($guest, $signUp);
-        $authManager->addChild($guest, $index);
-        $authManager->addChild($guest, $view);
- 
-        // BRAND
-        $authManager->addChild($brand, $update);
-        $authManager->addChild($brand, $guest);
- 
-        // TALENT
-        $authManager->addChild($talent, $update);
-        $authManager->addChild($talent, $guest);
- 
-        // Admin
-        $authManager->addChild($admin, $delete);
-        $authManager->addChild($admin, $talent);
-        $authManager->addChild($admin, $brand);
+        $auth = Yii::$app->authManager;
+        $auth->removeAll(); //удаляем старые данные
+        //Создадим для примера права для доступа к админке
+        $dashboard = $auth->createPermission('dashboard');
+        $dashboard->description = 'Админ панель';
+        $auth->add($dashboard);
+        //Включаем наш обработчик
+        $rule = new UserGroupRule();
+        $auth->add($rule);
+        //Добавляем роли
+        $guest = $auth->createRole('guest');
+        $guest->description = 'Гость';
+        $guest->ruleName = $rule->name;
+        $auth->add($guest);
+        $root = $auth->createRole('root');
+        $root->description = 'Суперпользователь';
+        $root->ruleName = $rule->name;
+        $auth->add($root);
+        $user = $auth->createRole('user');
+        $user->description = 'Пользователь';
+        $user->ruleName = $rule->name;
+        $auth->add($user);
+        $moder = $auth->createRole('moderator');
+        $moder->description = 'Модератор';
+        $moder->ruleName = $rule->name;
+        $auth->add($moder);
+        //Добавляем потомков
+        $auth->addChild($user, $guest);
+        $auth->addChild($moder, $user);
+        $auth->addChild($moder, $dashboard);
+        $admin = $auth->createRole('admin');
+        $admin->description = 'Администратор';
+        $admin->ruleName = $rule->name;
+        $auth->add($admin);
+        $auth->addChild($admin, $moder);
+        $auth->addChild($root, $admin);
     }
 }
