@@ -56,13 +56,13 @@ class CompanySearch extends Company
             // $query->where('0=1');
             return $dataProvider;
         }
-
+        //var_dump(Categories::findCategoryByName($this->category));
         $query->andFilterWhere(['like', '_id', $this->_id])
             ->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'legal_form', $this->legal_form])
             ->andFilterWhere(['like', 'legal_name', $this->legal_name])
             ->andFilterWhere(['like', 'sphere', $this->sphere])
-            ->andFilterWhere(['like', 'company_size', $this->company_size])
+            ->andFilterWhere(['company_size'=>$this->company_size])
             ->andFilterWhere(['like', 'address_id', $this->address_id])
             ->andFilterWhere(['like', 'address_addition', $this->address_addition])
             ->andFilterWhere(['like', 'phone_numbers', $this->phone_numbers])
@@ -77,14 +77,14 @@ class CompanySearch extends Company
             ->andFilterWhere(['like', 'branch_name', $this->branch_name])
             ->andFilterWhere(['like', 'description', $this->description])
             ->andFilterWhere(['like', 'status', $this->status])
-            ->andFilterWhere(['like', 'wants_placement', $this->wants_placement])
-            ->andFilterWhere(['like', 'export_to_yandex', $this->export_to_yandex])
+            ->andFilterWhere(['wants_placement'=>$this->wants_placement])
+            ->andFilterWhere(['export_to_yandex'=>$this->export_to_yandex])
             ->andFilterWhere(['like', 'postcode', $this->postcode])
             ->andFilterWhere(['like', 'type', $this->type])
             ->andFilterWhere(['like', 'parentID', $this->parentID])
             ->andFilterWhere(['like', 'branchParentID', $this->branchParentID])
-            ->andFilterWhere(['like', 'category.name', $this->category])
-            ->andFilterWhere(['like', 'user.name', $this->user]);
+            ->andFilterWhere(['in', 'user_id', Users::findUserByName($this->user)])
+            ->andFilterWhere(['in', 'parentID', Categories::findCategoryByName($this->category)]);
 
         return $dataProvider;
     }

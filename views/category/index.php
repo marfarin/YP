@@ -18,6 +18,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Create Categories', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
+    
+    <p>
+        <?= Html::a('Show Categories as tree', ['tree'], ['class' => 'btn btn-success']) ?>
+    </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,

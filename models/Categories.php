@@ -127,4 +127,16 @@ class Categories extends \yii\mongodb\ActiveRecord
     {
         return $this->hasMany(Company::className(), ['parentID'=>'_id']);
     }
+    
+    public static function findCategoryByName($name)
+    {
+        if ($name == null) {
+            return null;
+        }
+        return self::find()
+            ->select(['_id'])
+            ->andFilterWhere(['like', 'name', $name])
+            ->asArray()
+            ->all()[0];
+    }
 }

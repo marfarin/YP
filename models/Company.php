@@ -81,15 +81,7 @@ class Company extends \yii\mongodb\ActiveRecord
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            [['name', 'legal_form', 'legal_name', 'sphere', 'company_size', 'address_id', 'address_addition', 'phone_numbers', 'short_phone_numbers', 'hr_phone_numbers', 'fax_numbers', 'email', 'url', 'working_time', 'update_time', 'user_id', 'branch_name', 'description', 'status', 'wants_placement', 'export_to_yandex', 'postcode', 'type', 'parentID', 'branchParentID'], 'safe']
-        ];
-    }
+
 
     /**
      * @inheritdoc
@@ -136,5 +128,48 @@ class Company extends \yii\mongodb\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(Users::className(), ['_id'=>'user_id']);
+    }
+    
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['name', 'sphere', 'address_id', 'working_time', 'parentID'], 'required'],
+            ['phone_numbers', 'validatePhone'],
+            ['short_phone_numbers', 'validateShortPhone'],
+            ['hr_phone_numbers', 'validateHrPhone'],
+            ['fax_numbers', 'validateFaxPhone'],
+            ['email', 'validateEmail'],
+            ['url', 'validateUrl'],
+            [['name', 'legal_form', 'legal_name', 'sphere', 'company_size', 'address_id', 'address_addition', 'phone_numbers', 'short_phone_numbers', 'hr_phone_numbers', 'fax_numbers', 'email', 'url', 'working_time', 'update_time', 'user_id', 'branch_name', 'description', 'status', 'wants_placement', 'export_to_yandex', 'postcode', 'type', 'parentID', 'branchParentID'], 'safe']
+        ];
+    }
+    
+    public function validatePhone($attribute, $params)
+    {
+        if (!isset(Yii::$app->request->post('Company')['paramsForms'])){}
+        return true;
+    }
+    public function validateShortPhone($attribute, $params)
+    {
+        return true;
+    }
+    public function validateHrPhone($attribute, $params)
+    {
+        return true;
+    }
+    public function validateEmail($attribute, $params)
+    {
+        return true;
+    }
+    public function validateUrl($attribute, $params)
+    {
+        return true;
+    }
+    public function validateFaxPhone($attribute, $params)
+    {
+        return true;
     }
 }

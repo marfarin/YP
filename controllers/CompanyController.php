@@ -5,9 +5,12 @@ namespace app\controllers;
 use Yii;
 use app\models\Company;
 use app\models\CompanySearch;
+use app\models\Users;
 use yii\web\Controller;
+use app\models\Categories;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * CompanyController implements the CRUD actions for Company model.
@@ -34,12 +37,12 @@ class CompanyController extends Controller
                         'roles' => ['@','?'],
                     ],
                     [
-                        'actions' => ['create', 'update'],
+                        'actions' => ['create', 'update','phonebutton'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
                     [
-                        'actions' => ['admin, delete'],
+                        'actions' => ['delete', 'phonenumbers'],
                         'allow' => true,
                         'roles' => ['moderator'],
                     ],
@@ -54,9 +57,11 @@ class CompanyController extends Controller
      */
     public function actionIndex()
     {
+        var_dump(Users::findUserByName('Марина'));
         $searchModel = new CompanySearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        var_dump(Users::findUserByName('Марина'));
+        var_dump(Categories::findCategoryByName('Акад'));
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -139,5 +144,16 @@ class CompanyController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+    
+    public function actionPhonenumbers($i)
+    {
+        $model = new Company();
+        //var_dump($model);
+        //echo \yii\helpers\Html::activeTextInput($model, 'phone_numbers[' . $i . ']');
+        return $this->render('addfield', [
+                'model' => $model,
+                'i' => $i,
+            ]);
     }
 }

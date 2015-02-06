@@ -125,4 +125,16 @@ class Users extends ActiveRecord implements \yii\web\IdentityInterface
         return self::find()->asArray()->all();
     }
     
+    public static function findUserByName($name)
+    {
+        if ($name == null) {
+            return null;
+        }
+        return self::find()
+            ->select(['_id'])
+            ->andFilterWhere(['like', 'name', $name])
+            ->asArray()
+            ->all()[0];
+    }
+    
 }
