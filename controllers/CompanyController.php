@@ -37,7 +37,7 @@ class CompanyController extends Controller
                         'roles' => ['@','?'],
                     ],
                     [
-                        'actions' => ['create', 'update','phonebutton'],
+                        'actions' => ['create', 'update','phonebutton','list'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -57,11 +57,8 @@ class CompanyController extends Controller
      */
     public function actionIndex()
     {
-        var_dump(Users::findUserByName('Марина'));
         $searchModel = new CompanySearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        var_dump(Users::findUserByName('Марина'));
-        var_dump(Categories::findCategoryByName('Акад'));
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -107,7 +104,8 @@ class CompanyController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        var_dump($model);
+        var_dump(Yii::$app->request->post());
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => (string)$model->_id]);
         } else {
@@ -139,21 +137,40 @@ class CompanyController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Company::findOne($id)) !== null) {
+        if (($model = Company::findOneForController($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
     
-    public function actionPhonenumbers($i)
+    protected function findRubric($id)
     {
-        $model = new Company();
-        //var_dump($model);
-        //echo \yii\helpers\Html::activeTextInput($model, 'phone_numbers[' . $i . ']');
-        return $this->render('addfield', [
-                'model' => $model,
-                'i' => $i,
-            ]);
+        if (($model = Categories::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+    
+    public function actionList($search = null, $id = null)
+    {
+        $map = array();
+        $out = ['more' => false];
+        if (!is_null($search)) {
+            $data = \app\models\Company::find()->select(['name'])->where(['like', 'name', $search])->asArray()->limit(20)->all();
+            
+            //$out['results'] = array_values($data);
+            foreach ($data as $key=>$value) {
+                $map[$key]['id'] = (string)$value['_id'];
+                $map[$key]['text'] = (string)$value['name'].' '.(string)$value['_id'];
+            }
+            $out['results'] = array_values($map);
+        } elseif ($id > 0) {
+            $out['results'] = ['id' => $id, 'name' => \app\models\Company::find($id)->name];
+        } else {
+            $out['results'] = ['id' => 0, 'name' => 'No matching records found'];
+        }
+        echo \yii\helpers\Json::encode($out);
     }
 }

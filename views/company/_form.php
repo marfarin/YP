@@ -11,23 +11,23 @@ use app\widgetExt\ExtActiveForm;
 
 <?php
  
-$this->registerJs(
+/*$this->registerJs(
    '$("document").ready(function(){ 
         $("#new_company").on("pjax:end", function() {
-            $.pjax.reload({container:"#companies"});  //Reload GridView
+            //$.pjax.reload({container:"#dynagrid-company",url:\'/company\'});  //Reload GridView
         });
     });'
-);
+);*/
 ?>
 
 
     
-    <?php yii\widgets\Pjax::begin(['id' => 'new_company', 'options' => [
-        'data-pjax' => '1'
-    ]]); ?>
+    
     <?php 
-        $form = ExtActiveForm::begin(['options' => [
-        'data-pjax' => '1'
+        $form = ExtActiveForm::begin(['id'=>'form_new_company', 'options' => [
+        'data-pjax' => '1',
+        'enableClientValidation' => true,
+        
     ],]);
         $queryStat = \app\models\Company::find()->asArray()->distinct('status');
         $queryCompany = \app\models\Company::find()->asArray()->distinct('company_size');
@@ -37,6 +37,7 @@ $this->registerJs(
         $queryStatus[''] = 'Не указано';
         $queryCompanySize += $queryCompany;
         $queryStatus += $queryStat;
+        
     ?>
 
     <?= $form->field($model, 'name') ?>
@@ -52,24 +53,6 @@ $this->registerJs(
     <?= $form->field($model, 'address_id') ?>
 
     <?= $form->field($model, 'address_addition') ?>
-
-    <?php
-    /*echo Html::input(
-        'button',
-        'btn_add',
-        'Add More',
-        [
-            'onclick'=>'$.post( "' . Yii::$app->urlManager->createUrl(['company/phonebutton', 'i'=>'']).'"+$("#counter").val(),
-                                function( data ){
-                                        var val = $("#counter").val();
-                                        $( "#counter" ).val( parseInt(val) + 1 );
-                                        $( "div#newlyaddedfields" ).append( data );
-                                });
-                ',//onclick end
-        ]
-    );
-    echo Html::hiddenInput('counter', count($model->phone_numbers), ['id'=>'palcnt',]);*/
-    ?>
 
     <?php
     
@@ -101,6 +84,11 @@ $this->registerJs(
 
     <?= $form->field($model, 'export_to_yandex')->dropDownList([0=>'НЕТ',1=>'ДА']) ?>
 
+    <?php
+        echo $form->showAdditionModelField($model, 'branchParentID', ['name'=>[]]);
+        echo $form->showAdditionModelField($model, 'parentID', ['name'=>[]]);
+    ?>
+
     <?= $form->field($model, 'postcode') ?>
 
 
@@ -109,5 +97,5 @@ $this->registerJs(
     </div>
 
     <?php ExtActiveForm::end(); ?>
-    <?php yii\widgets\Pjax::end(); ?>
+    <?php //yii\widgets\Pjax::end(); ?>
 

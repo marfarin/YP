@@ -36,6 +36,7 @@ use Yii;
  */
 class Company extends \yii\mongodb\ActiveRecord
 {
+    
     /**
      * @inheritdoc
      */
@@ -137,39 +138,62 @@ class Company extends \yii\mongodb\ActiveRecord
     {
         return [
             [['name', 'sphere', 'address_id', 'working_time', 'parentID'], 'required'],
-            ['phone_numbers', 'validatePhone'],
-            ['short_phone_numbers', 'validateShortPhone'],
-            ['hr_phone_numbers', 'validateHrPhone'],
-            ['fax_numbers', 'validateFaxPhone'],
+            ['phone_numbers', 'validateArrayPhone'],
+            ['short_phone_numbers', 'validateArrayPhone'],
+            ['hr_phone_numbers', 'validateArrayPhone'],
+            ['fax_numbers', 'validateArrayPhone'],
             ['email', 'validateEmail'],
             ['url', 'validateUrl'],
+            //['name', 'string', 'max'=>9],
             [['name', 'legal_form', 'legal_name', 'sphere', 'company_size', 'address_id', 'address_addition', 'phone_numbers', 'short_phone_numbers', 'hr_phone_numbers', 'fax_numbers', 'email', 'url', 'working_time', 'update_time', 'user_id', 'branch_name', 'description', 'status', 'wants_placement', 'export_to_yandex', 'postcode', 'type', 'parentID', 'branchParentID'], 'safe']
         ];
     }
     
-    public function validatePhone($attribute, $params)
+    public function validateArrayPhone($attribute, $params)
     {
-        if (!isset(Yii::$app->request->post('Company')['paramsForms'])){}
-        return true;
-    }
-    public function validateShortPhone($attribute, $params)
-    {
-        return true;
-    }
-    public function validateHrPhone($attribute, $params)
-    {
-        return true;
+        $paramsForValidation = Yii::$app->request->post('Company')[$attribute];
+        $validator = new \yii\validators\RegularExpressionValidator(['pattern' => '/^(\+7\(\d{3}\)\d{3}-\d{2}-\d{2};?)*$/']);
+        if (!empty($paramsForValidation)) {
+            foreach ($paramsForValidation as $key => $value) {
+                if (!$validator->validate($value, $error)) {
+                    $this->addError($attribute.'['.$key.']', $error);
+                }
+            }
+        }
     }
     public function validateEmail($attribute, $params)
     {
-        return true;
+        $fieldsForValidation = Yii::$app->request->post('Company')[$attribute];
+        $validator = new \yii\validators\EmailValidator(['skipOnEmpty' => true,]);
+        $fieldsForValidation = array_diff($fieldsForValidation, array(''));
+        if (!empty($fieldsForValidation)) {
+            foreach ($fieldsForValidation as $value) {
+                if (!$validator->validate($value, $error)) {
+                    $this->addError($attribute, $error);
+                }
+            }
+        }
+        Yii::$app->request->post('Company')[$attribute] = $fieldsForValidation;
     }
     public function validateUrl($attribute, $params)
     {
-        return true;
+        $fieldsForValidation = Yii::$app->request->post('Company')[$attribute];
+        $validator = new \yii\validators\UrlValidator(['skipOnEmpty' => true,]);
+        $fieldsForValidation = array_diff($fieldsForValidation, array(''));
+        if (!empty($fieldsForValidation)) {
+            foreach ($fieldsForValidation as $key=>$value) {
+                if (!$validator->validate($value, $error)) {
+                    $this->addError($attribute.'['.$key.']', $error);
+                }
+            }
+        }
+        Yii::$app->request->post('Company')[$attribute] = $fieldsForValidation;
     }
-    public function validateFaxPhone($attribute, $params)
-    {
-        return true;
+    
+    public static function findOneForController($condition) {
+        $result = self::findOne($condition);
+        $result->branchParentID = self::findAll($result->branchParentID);
+        $result->parentID = Categories::findAll($result->parentID);
+        return $result;
     }
 }

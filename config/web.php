@@ -38,6 +38,16 @@ $config = [
             ],
         ],
         'mongodb' => require(__DIR__ . '/db.php'),
+        'db' => [
+            'class' =>'yii\db\Connection',
+            'dsn' => 'pgsql:host=192.168.10.30;port=5432;dbname=postgis',   
+            'emulatePrepare'  => true,
+            'enableProfiling' => true,
+            'enableParamLogging'=>true,
+            'username' => 'postgres',
+            'password' => 'postgres',
+            'charset' => 'utf8',
+        ],
         'urlManager' => [
                 'enablePrettyUrl' => true,
                 'showScriptName' => false,
@@ -48,6 +58,7 @@ $config = [
                     'users'=>'users/index',
                     'category'=>'category/index',
                     'company'=>'company/index',
+                    'company/list'=>'company/list'
                     //'debug/<controller>/<action>' => 'debug/<controller>/<action>',
 
                 ],

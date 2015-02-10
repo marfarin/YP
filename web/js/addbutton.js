@@ -7,13 +7,18 @@
 
 function addButton(element)
 {
-    var id = $(element).attr('id');
-    
-    var sys_id = $(element).attr('systemid');
-    var valName = '#counter_'+sys_id+'';
-    var val = $(valName).val();
-    var name = 'Company['+sys_id+']['+(parseInt(val)-1)+']';
-    var clone = document.getElementsByName(name);
-    $(valName).val(parseInt(val) + 1);
-    $('div#newlyaddedfields_'+sys_id+'').append(clone);
+    var nameClassAddedField = $(element).attr('systemid');
+    var counterAddedFieldName = '#counter_'+nameClassAddedField+'';
+    var val = $(counterAddedFieldName).val();
+    var inputTextClassFieldId = '#company-'+nameClassAddedField+'-'+(parseInt(val)-1);
+    var classParentDivTextField = '.field-company-'+nameClassAddedField+'-'+(parseInt(val)-1);
+    var clone  = $(classParentDivTextField).clone();
+    clone.attr('class','form-group field-company-'+nameClassAddedField+'-'+(parseInt(val)));
+    //var childrenClone = clone.jQuery(":first-child");
+    clone.children(':first-child').attr('name', 'Company['+nameClassAddedField+']['+(parseInt(val))+']');
+    clone.children(":first-child").attr('id', 'company-'+nameClassAddedField+'-'+(parseInt(val)));
+    clone.children(":first-child").attr('value', '');
+    clone.children(":first-child").val('');
+    clone.appendTo('#div_'+nameClassAddedField);
+    $(counterAddedFieldName).val(parseInt(val) + 1);
 }
