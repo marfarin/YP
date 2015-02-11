@@ -23,5 +23,7 @@ return array(
     'kartik\\form\\' => array($vendorDir . '/kartik-v/yii2-widget-activeform'),
     'kartik\\dynagrid\\' => array($vendorDir . '/kartik-v/yii2-dynagrid'),
     'kartik\\base\\' => array($vendorDir . '/kartik-v/yii2-krajee-base'),
+    'consultnn\\api\\' => array($vendorDir . '/consultnn/api-client'),
     'cebe\\markdown\\' => array($vendorDir . '/cebe/markdown'),
+    'Faker\\' => array($vendorDir . '/fzaninotto/faker/src/Faker'),
 );

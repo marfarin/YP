@@ -189,11 +189,4 @@ class Company extends \yii\mongodb\ActiveRecord
         }
         Yii::$app->request->post('Company')[$attribute] = $fieldsForValidation;
     }
-    
-    public static function findOneForController($condition) {
-        $result = self::findOne($condition);
-        $result->branchParentID = self::findAll($result->branchParentID);
-        $result->parentID = Categories::findAll($result->parentID);
-        return $result;
-    }
 }

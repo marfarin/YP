@@ -85,8 +85,8 @@ use app\widgetExt\ExtActiveForm;
     <?= $form->field($model, 'export_to_yandex')->dropDownList([0=>'НЕТ',1=>'ДА']) ?>
 
     <?php
-        echo $form->showAdditionModelField($model, 'branchParentID', ['name'=>[]]);
-        echo $form->showAdditionModelField($model, 'parentID', ['name'=>[]]);
+        echo $form->showAdditionModelField($model, 'branchParentID', 'company');
+        echo $form->showAdditionModelField($model, 'parentID', 'category');
     ?>
 
     <?= $form->field($model, 'postcode') ?>

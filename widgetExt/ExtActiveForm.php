@@ -49,7 +49,13 @@ class ExtActiveForm extends ActiveForm
             }
             //$result .= $this->field($model, $nameAttrib . '[' . 100000 . ']')->textInput()->label(false);
         } else {
-            $result .= $this->field($model, $nameAttrib)->textInput()->label(false);
+            $result .= $this->field($model, $nameAttrib)
+                ->textInput()
+                ->label(false)->widget(\yii\widgets\MaskedInput::className(), [
+                        'options' => [
+                            'mask' => '+7(999)999-99-99',
+                        ]
+                ]);
         }
         $result .= Html::hiddenInput(
             'counter_' . $nameAttrib,
@@ -59,10 +65,10 @@ class ExtActiveForm extends ActiveForm
         return Html::tag("div", $result, ['id'=>'div_'.$nameAttrib]);
     }
     
-    public function showAdditionModelField($model, $nameAttrib, $showAttribs = array())
+    public function showAdditionModelField($model, $nameAttrib, $whatShow)
     {
         $result =  Html::label($model->attributeLabels()[$nameAttrib]);
-        $url = \yii\helpers\Url::to(['list']);
+        $url = \yii\helpers\Url::to(['list-'.$whatShow]);
         $initScript = <<< SCRIPT
             function (element, callback) {
                 var id=\$(element).val();
@@ -76,27 +82,24 @@ SCRIPT;
         $submodel = $model[$nameAttrib];
         if (is_array($submodel)) {
             foreach ($submodel as $key => $value) {
-                foreach ($showAttribs as $keyAttribs => $valAttribs) {
-                    $valAttribs['value'] = (string)$value["_id"];
-                    //var_dump($valAttribs)
-                    $result .= $this->field($value, '[' . $key . ']' . '' . $keyAttribs. '')
-                        ->textInput()
-                        ->label(false)
-                        ->widget(\kartik\select2\Select2::className(), [
-                            'options' => ['placeholder' => 'Search for a city ...'],
-                            'pluginOptions' => [
-                                'allowClear' => true,
-                                'minimumInputLength' => 3,
-                                'ajax' => [
-                                    'url' => $url,
-                                    'dataType' => 'json',
-                                    'data' => new JsExpression('function(term,page) { return {search:term}; }'),
-                                    'results' => new JsExpression('function(data,page) { return {results:data.results}; }'),
-                                ],
-                                'initSelection' => new JsExpression($initScript)
+                $result .= $this->field($model, $nameAttrib . '[' . $key . ']')
+                    ->textInput()
+                    ->label(false)
+                    ->widget(\kartik\select2\Select2::className(), [
+                        'options' => ['placeholder' => 'Поиск родительских компаний'],
+                        'pluginOptions' => [
+                            'allowClear' => true,
+                            'minimumInputLength' => 3,
+                            'ajax' => [
+                                'url' => $url,
+                                'dataType' => 'json',
+                                'data' => new JsExpression('function(term,page) { return {search:term}; }'),
+                                'results' => new JsExpression('function(data,page) { return {results:data.results}; }'),
                             ],
-                        ]);
-                }
+                            'initSelection' => new JsExpression($initScript)
+                        ],
+                    ]);
+            
             }
         } else {
             $result .= $this->field($model, $nameAttrib)->textInput()->label(false);

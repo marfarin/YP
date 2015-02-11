@@ -37,7 +37,7 @@ class CompanyController extends Controller
                         'roles' => ['@','?'],
                     ],
                     [
-                        'actions' => ['create', 'update','phonebutton','list'],
+                        'actions' => ['create', 'update','phonebutton','list-company', 'list-category'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -104,8 +104,6 @@ class CompanyController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        var_dump($model);
-        var_dump(Yii::$app->request->post());
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => (string)$model->_id]);
         } else {
@@ -137,7 +135,7 @@ class CompanyController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Company::findOneForController($id)) !== null) {
+        if (($model = Company::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
@@ -153,7 +151,7 @@ class CompanyController extends Controller
         }
     }
     
-    public function actionList($search = null, $id = null)
+    public function actionListCompany($search = null, $id = null)
     {
         $map = array();
         $out = ['more' => false];
@@ -163,13 +161,34 @@ class CompanyController extends Controller
             //$out['results'] = array_values($data);
             foreach ($data as $key=>$value) {
                 $map[$key]['id'] = (string)$value['_id'];
-                $map[$key]['text'] = (string)$value['name'].' '.(string)$value['_id'];
+                $map[$key]['text'] = (string)$value['name'];
             }
             $out['results'] = array_values($map);
         } elseif ($id > 0) {
-            $out['results'] = ['id' => $id, 'name' => \app\models\Company::find($id)->name];
+            $out['results'] = ['id' => $id, 'text' => \app\models\Company::find($id)->asArray()->one()['name']];
         } else {
-            $out['results'] = ['id' => 0, 'name' => 'No matching records found'];
+            $out['results'] = ['id' => 0, 'text' => 'No matching records found'];
+        }
+        echo \yii\helpers\Json::encode($out);
+    }
+    
+    public function actionListCategory($search = null, $id = null)
+    {
+        $map = array();
+        $out = ['more' => false];
+        if (!is_null($search)) {
+            $data = Categories::find()->select(['name'])->where(['like', 'name', $search])->asArray()->limit(20)->all();
+            
+            //$out['results'] = array_values($data);
+            foreach ($data as $key=>$value) {
+                $map[$key]['id'] = (string)$value['_id'];
+                $map[$key]['text'] = (string)$value['name'];
+            }
+            $out['results'] = array_values($map);
+        } elseif ($id > 0) {
+            $out['results'] = ['id' => $id, 'text' => Categories::find($id)->asArray()->one()['name']];
+        } else {
+            $out['results'] = ['id' => 0, 'text' => 'No matching records found'];
         }
         echo \yii\helpers\Json::encode($out);
     }
