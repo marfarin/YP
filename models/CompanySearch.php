@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Company;
+use consultnn\api\mappers\Address;
 
 /**
  * CompanySearch represents the model behind the search form about `app\models\Company`.
@@ -15,6 +16,9 @@ class CompanySearch extends Company
     /**
      * @inheritdoc
      */
+    
+    public $category;
+    public $user;
     
     public function rules()
     {
@@ -48,7 +52,8 @@ class CompanySearch extends Company
         ]);
 
         $this->load($params);
-        var_dump($dataProvider);
+        //var_dump($dataProvider);
+        //var_dump($query);
         if (!$this->validate()) {
             // uncomment the following line if you do not want to any records when validation fails
             // $query->where('0=1');
@@ -83,9 +88,7 @@ class CompanySearch extends Company
             ->andFilterWhere(['like', 'branchParentID', $this->branchParentID])
             ->andFilterWhere(['in', 'user_id', Users::findUserByName($this->user)])
             ->andFilterWhere(['in', 'parentID', Categories::findCategoryByName($this->category)]);
-        var_dump($dataProvider);
+        //var_dump($dataProvider);
         return $dataProvider;
     }
-    
-
 }

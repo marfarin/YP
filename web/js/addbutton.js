@@ -20,5 +20,9 @@ function addButton(element)
     clone.children(":first-child").attr('value', '');
     clone.children(":first-child").val('');
     clone.appendTo('#div_'+nameClassAddedField);
+    jQuery(document).ready(function() {
+        $('#company-'+nameClassAddedField+'-'+(parseInt(val))).inputmask(inputmask_69a2315d);
+    });
+    //$('#company-'+nameClassAddedField+'-'+(parseInt(val))).inputmask(inputmask_)
     $(counterAddedFieldName).val(parseInt(val) + 1);
 }

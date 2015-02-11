@@ -56,17 +56,17 @@ use app\widgetExt\ExtActiveForm;
 
     <?php
     
-    echo $form->showMultipleForm('phone_numbers', $model);
+    echo $form->showMultipleForm('phone_numbers', $model, ExtActiveForm::SHOW_ADD_BUTTON, ExtActiveForm::USE_MASKED_INPUT_WIDGET_PHONE);
     
     echo $form->showMultipleForm('short_phone_numbers', $model);
     
-    echo $form->showMultipleForm('hr_phone_numbers', $model);
+    echo $form->showMultipleForm('hr_phone_numbers', $model, ExtActiveForm::SHOW_ADD_BUTTON, ExtActiveForm::USE_MASKED_INPUT_WIDGET_PHONE);
     
-    echo $form->showMultipleForm('fax_numbers', $model);
+    echo $form->showMultipleForm('fax_numbers', $model, ExtActiveForm::SHOW_ADD_BUTTON, ExtActiveForm::USE_MASKED_INPUT_WIDGET_PHONE);
     
-    echo $form->showMultipleForm('email', $model);
+    echo $form->showMultipleForm('email', $model, ExtActiveForm::SHOW_ADD_BUTTON, ExtActiveForm::USE_MASKED_INPUT_WIDGET_MAIL);
     
-    echo $form->showMultipleForm('url', $model);
+    echo $form->showMultipleForm('url', $model, ExtActiveForm::SHOW_ADD_BUTTON, ExtActiveForm::USE_MASKED_INPUT_WIDGET_URL);
     
     ?>
 
@@ -85,8 +85,8 @@ use app\widgetExt\ExtActiveForm;
     <?= $form->field($model, 'export_to_yandex')->dropDownList([0=>'НЕТ',1=>'ДА']) ?>
 
     <?php
-        echo $form->showAdditionModelField($model, 'branchParentID', 'company');
-        echo $form->showAdditionModelField($model, 'parentID', 'category');
+        echo $form->showMultipleForm('branchParentID', $model, ExtActiveForm::NOT_SHOW_ADD_BUTTON, ExtActiveForm::USE_AJAX_AUTOCOMPLETE, 'company');
+        echo $form->showMultipleForm('parentID', $model, ExtActiveForm::NOT_SHOW_ADD_BUTTON, ExtActiveForm::USE_AJAX_AUTOCOMPLETE, 'category');
     ?>
 
     <?= $form->field($model, 'postcode') ?>
