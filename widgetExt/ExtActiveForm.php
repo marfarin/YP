@@ -12,6 +12,7 @@ use Yii;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 use yii\web\JsExpression;
+use yii\helpers\Json;
 
 /**
  * Description of ExtActiveForm
@@ -38,19 +39,25 @@ class ExtActiveForm extends ActiveForm
         $nameAtr = preg_replace("/[-_]/u", '', $nameAttrib);
         $nameAtr  =  mb_strtolower($nameAtr);
         //$div = Html::tag("div".$nameAttrib, $content);
-        $button = Html::button(
-            'Add more '.$model->attributeLabels()[$nameAttrib],
-            [
+        $configButton = [
                 'class' => $model->isNewRecord ? 'btn btn-primarybtn btn-success '.$nameAttrib.'' : 'btn btn-success '.$nameAttrib.'',
                 'id' => 'more_'.$nameAttrib.'',
                 'onclick'=>'return addButton(this);',
                 'systemid' => $nameAttrib,
-            ]
+            ];
+        if ($widget === self::USE_AJAX_AUTOCOMPLETE) {
+            $configButton['onclick'] = 'return addMultipleButton(this);';
+            
+        }
+        $button = Html::button(
+            'Add more '.$model->attributeLabels()[$nameAttrib],
+            $configButton
+            
         );
         $hiddenCounterField = Html::hiddenInput(
             'counter_' . $nameAttrib,
             count($model[$nameAttrib]),
-            ['id'=>'counter_' . $nameAttrib,]
+            ['id'=>'counter_' . mb_strtolower($nameAttrib),]
         );
         $result =  Html::label($model->attributeLabels()[$nameAttrib]);
         switch ($showAddButton) {
@@ -65,7 +72,8 @@ class ExtActiveForm extends ActiveForm
             $widget = self::DONT_USE_WIDGET;
         }
         foreach ($model[$nameAttrib] as $key => $value) {
-            $field = $this->field($model, $nameAttrib . '[' . $key . ']')->textInput()->label(false);    
+            $field = $this->field($model, $nameAttrib . '[' . $key . ']')->textInput()->label(false);
+            $config = array();
             switch ($widget) {
                 case self::DONT_USE_WIDGET:
                     break;
@@ -73,9 +81,7 @@ class ExtActiveForm extends ActiveForm
                     $field = $this->addAjaxWidget($field, $whatShow);
                     break;
                 case self::USE_MASKED_INPUT_WIDGET_PHONE:
-                    $field->widget(
-                        \yii\widgets\MaskedInput::className(),
-                        [
+                    $config = [
                             
                             'mask' => '+7(999)999-99-99',
                             //'options' => ['class'=>'inputPhone',],
@@ -84,13 +90,15 @@ class ExtActiveForm extends ActiveForm
                                 'class' => 'form-control addInput',
                                 
                             ]
-                        ]
-                    );
+                        ];
+                    //$field->inputOptions = ['crc32'=>$this->initClientOptions($config)];
+                    $config['options']['crc32'] = $this->initClientOptions($config);
+                    //var_dump($this->initClientOptions($config));
+                    $field->widget(\yii\widgets\MaskedInput::className(), $config);
+                    
                     break;
                 case self::USE_MASKED_INPUT_WIDGET_URL:
-                    $field->widget(
-                        \yii\widgets\MaskedInput::className(),
-                        [
+                    $config = [
                             'clientOptions' => [
                                 'alias' => 'url',
                             
@@ -100,29 +108,31 @@ class ExtActiveForm extends ActiveForm
                             'options' => [
                                 'class' => 'form-control addInput',
                             ]
-                        ]
-                    );
+                        ];
+                    $config['options']['crc32'] = $this->initClientOptions($config);
+                    $field->widget(\yii\widgets\MaskedInput::className(), $config);
+                    
                     break;
                 case self::USE_MASKED_INPUT_WIDGET_MAIL:
-                    $field->widget(
-                        \yii\widgets\MaskedInput::className(),
-                        [
+                    $config = [
                             'clientOptions' => [
                                 'alias' => 'email',
+                            
                             ],
                             //'options' => ['class'=>'inputPhone',],
                             'name' => 'input37',
                             'options' => [
                                 'class' => 'form-control addInput',
-                                'id'=>'123'
                             ]
-                        ]
-                    );
+                        ];
+                    $config['options']['crc32'] = $this->initClientOptions($config);
+                    $field->widget(\yii\widgets\MaskedInput::className(), $config);
+                    
                     break;
             }
             $result .= $field;
         }
-        return Html::tag("div", $result, ['id'=>'div_'.$nameAttrib]);
+        return Html::tag("div", $result, ['id'=>'div_'.mb_strtolower($nameAttrib)]);
     }
     
     public function addAjaxWidget($field, $whatShow = 'company')
@@ -153,5 +163,25 @@ SCRIPT;
             ],
         ]);
         return $field;
+    }
+
+    /**
+     * Initializes client options
+     */
+    protected function initClientOptions($options)
+    {
+        //$options = $this->clientOptions;
+        if (!empty($options['mask'])) {
+            $options['clientOptions']['mask'] = $options['mask'];
+        }
+        foreach ($options['clientOptions'] as $key => $value) {
+            if (!$value instanceof JsExpression && in_array($key, ['oncomplete', 'onincomplete', 'oncleared', 'onKeyUp',
+                    'onKeyDown', 'onBeforeMask', 'onBeforePaste', 'onUnMask', 'isComplete', 'determineActiveMasksetIndex'])
+            ) {
+                $options['clientOptions'][$key] = new JsExpression($value);
+            }
+        }
+        $encOptions = empty($options['clientOptions']) ? '{}' : Json::encode($options['clientOptions']);
+        return hash('crc32', $encOptions);
     }
 }

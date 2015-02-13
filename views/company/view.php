@@ -37,12 +37,61 @@ $this->params['breadcrumbs'][] = $this->title;
             'company_size',
             'address_id',
             'address_addition',
-            'phone_numbers',
-            'short_phone_numbers',
-            'hr_phone_numbers',
-            'fax_numbers',
-            'email',
-            'url',
+            
+            [
+                'attribute' => 'phone_numbers',
+                'value' => call_user_func(function($model) {
+                    $branchParentID = implode($model->phone_numbers, '<br>');
+                    return $branchParentID;
+                }, $model),
+                'format' => 'raw'
+                                
+            ],
+            [
+                'attribute' => 'short_phone_numbers',
+                'value' => call_user_func(function($model) {
+                    $branchParentID = implode($model->short_phone_numbers, '<br>');
+                    return $branchParentID;
+                }, $model),
+                'format' => 'raw'
+                                
+            ],
+            [
+                'attribute' => 'hr_phone_numbers',
+                'value' => call_user_func(function($model) {
+                    $branchParentID = implode($model->hr_phone_numbers, '<br>');
+                    return $branchParentID;
+                }, $model),
+                'format' => 'raw'
+                                
+            ],
+            [
+                'attribute' => 'fax_numbers',
+                'value' => call_user_func(function($model) {
+                    $branchParentID = implode($model->fax_numbers, '<br>');
+                    return $branchParentID;
+                }, $model),
+                'format' => 'raw'
+                                
+            ],
+            [
+                'attribute' => 'email',
+                'value' => call_user_func(function($model) {
+                    $branchParentID = implode($model->email, '<br>');
+                    return $branchParentID;
+                }, $model),
+                'format' => 'raw'
+                                
+            ],
+            [
+                'attribute' => 'url',
+                'value' => call_user_func(function($model) {
+                    $branchParentID = implode($model->url, '<br>');
+                    return $branchParentID;
+                }, $model),
+                'format' => 'raw'
+                                
+            ],
             'working_time',
             'update_time',
             'user_id',
@@ -54,6 +103,18 @@ $this->params['breadcrumbs'][] = $this->title;
             'postcode',
             'type',
             [
+                'attribute' => 'category',
+                'value' => call_user_func(function($model) {
+                    $result = "";
+                    foreach ($model->category as $value) {
+                        $result.=$value['name']."</br>";
+                    }
+                    return $result;
+                }, $model),
+                'format' => 'raw'
+                                
+            ],
+            /*[
                 'attribute' => 'branchParentID',
                 'value' => call_user_func(function($model) {
                     $branchParentID = implode($model->branchParentID, '<br>');
@@ -69,7 +130,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $parentID;
                 }, $model),
                 'format' => 'raw'
-            ],
+            ],*/
         ],
     ]) ?>
 

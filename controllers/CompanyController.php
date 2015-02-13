@@ -11,6 +11,7 @@ use app\models\Categories;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\web\Response;
 
 /**
  * CompanyController implements the CRUD actions for Company model.
@@ -104,12 +105,27 @@ class CompanyController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            //var_dump($model->load(Yii::$app->request->post()));
+            return \app\widgetExt\ExtActiveForm::validate($model);
+        } elseif ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => (string)$model->_id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
             ]);
+        }
+    }
+    
+    
+    public function actionValidNewField($id)
+    {
+        $model = $this->findModel($id);
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            //var_dump($model);
+            return \app\widgetExt\ExtActiveForm::validate($model);
         }
     }
 
@@ -165,7 +181,7 @@ class CompanyController extends Controller
             }
             $out['results'] = array_values($map);
         } elseif ($id > 0) {
-            $out['results'] = ['id' => $id, 'text' => \app\models\Company::find($id)->asArray()->one()['name']];
+            $out['results'] = ['id' => $id, 'text' => \app\models\Company::find()->asArray()->where(['_id'=>$id])->one()['name']];
         } else {
             $out['results'] = ['id' => 0, 'text' => 'No matching records found'];
         }
@@ -178,18 +194,21 @@ class CompanyController extends Controller
         $out = ['more' => false];
         if (!is_null($search)) {
             $data = Categories::find()->select(['name'])->where(['like', 'name', $search])->asArray()->limit(20)->all();
-            
+            //var_dump($data);    
             //$out['results'] = array_values($data);
             foreach ($data as $key=>$value) {
                 $map[$key]['id'] = (string)$value['_id'];
                 $map[$key]['text'] = (string)$value['name'];
             }
             $out['results'] = array_values($map);
+            
         } elseif ($id > 0) {
-            $out['results'] = ['id' => $id, 'text' => Categories::find($id)->asArray()->one()['name']];
+            //var_dump(Categories::find(new \MongoId($id))->asArray()->one());
+            $out['results'] = ['id' => $id, 'text' => Categories::find()->asArray()->where(['_id'=>$id])->one()['name']];
         } else {
             $out['results'] = ['id' => 0, 'text' => 'No matching records found'];
         }
+        //var_dump('$value');
         echo \yii\helpers\Json::encode($out);
     }
 }

@@ -24,11 +24,16 @@ use app\widgetExt\ExtActiveForm;
     
     
     <?php 
-        $form = ExtActiveForm::begin(['id'=>'form_new_company', 'options' => [
-        'data-pjax' => '1',
-        'enableClientValidation' => true,
-        
-    ],]);
+        $form = ExtActiveForm::begin(['id'=>'form_new_company', 
+            'enableClientValidation' => false,
+            'enableAjaxValidation' => true,
+            'validateOnChange' => true,
+            'validateOnBlur'=> false,
+            'validateOnSubmit' => true,
+            
+            
+        ]);
+        //$form->validateOnBlur = true;
         $queryStat = \app\models\Company::find()->asArray()->distinct('status');
         $queryCompany = \app\models\Company::find()->asArray()->distinct('company_size');
         $queryStat = array_combine(array_filter($queryStat), array_filter($queryStat));
@@ -86,7 +91,7 @@ use app\widgetExt\ExtActiveForm;
 
     <?php
         echo $form->showMultipleForm('branchParentID', $model, ExtActiveForm::NOT_SHOW_ADD_BUTTON, ExtActiveForm::USE_AJAX_AUTOCOMPLETE, 'company');
-        echo $form->showMultipleForm('parentID', $model, ExtActiveForm::NOT_SHOW_ADD_BUTTON, ExtActiveForm::USE_AJAX_AUTOCOMPLETE, 'category');
+        echo $form->showMultipleForm('parentID', $model, ExtActiveForm::SHOW_ADD_BUTTON, ExtActiveForm::USE_AJAX_AUTOCOMPLETE, 'category');
     ?>
 
     <?= $form->field($model, 'postcode') ?>

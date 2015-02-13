@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use app\behaviours\DateTimeBehavior;
+use yii\mongodb\ActiveRecord;
 
 /**
  * This is the model class for collection "Company".
@@ -34,8 +36,16 @@ use Yii;
  * @property mixed $parentID
  * @property mixed $branchParentID
  */
-class Company extends \yii\mongodb\ActiveRecord
+class Company extends ActiveRecord
 {
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => DateTimeBehavior::className(),
+            ],
+        ];
+    }
     
     /**
      * @inheritdoc
@@ -151,6 +161,7 @@ class Company extends \yii\mongodb\ActiveRecord
     
     public function validateArrayPhone($attribute, $params)
     {
+        //var_dump($attribute);
         $paramsForValidation = Yii::$app->request->post('Company')[$attribute];
         $validator = new \yii\validators\RegularExpressionValidator(['pattern' => '/^(\+7\(\d{3}\)\d{3}-\d{2}-\d{2};?)*$/']);
         if (!empty($paramsForValidation)) {
