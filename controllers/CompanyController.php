@@ -59,6 +59,9 @@ class CompanyController extends Controller
                     ],
                 ],
             ],
+            [
+                'class' => \app\components\behaviours\ClearEmptyBehaviour::className(),
+            ],
         ];
     }
 

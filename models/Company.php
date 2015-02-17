@@ -47,6 +47,9 @@ class Company extends ActiveRecord
             [
                 'class' => \app\components\behaviours\MongoIdBehavior::className(),
             ],
+            [
+                'class' => \app\components\behaviours\ClearEmptyBehaviour::className(),
+            ],
         ];
     }
     

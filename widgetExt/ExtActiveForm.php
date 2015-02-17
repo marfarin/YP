@@ -54,9 +54,13 @@ class ExtActiveForm extends ActiveForm
             $configButton
             
         );
+        $counter = count($model[$nameAttrib]);
+        if ($counter == 0) {
+            $counter = 1;
+        }
         $hiddenCounterField = Html::hiddenInput(
             'counter_' . $nameAttrib,
-            count($model[$nameAttrib]),
+            $counter,
             ['id'=>'counter_' . mb_strtolower($nameAttrib),]
         );
         $result =  Html::label($model->attributeLabels()[$nameAttrib]);
@@ -69,68 +73,13 @@ class ExtActiveForm extends ActiveForm
         }
         
         if (!is_array($model[$nameAttrib])) {
-            $widget = self::DONT_USE_WIDGET;
-        }
-        foreach ($model[$nameAttrib] as $key => $value) {
-            $field = $this->field($model, $nameAttrib . '[' . $key . ']')->textInput()->label(false);
-            $config = array();
-            switch ($widget) {
-                case self::DONT_USE_WIDGET:
-                    break;
-                case self::USE_AJAX_AUTOCOMPLETE:
-                    $field = $this->addAjaxWidget($field, $whatShow);
-                    break;
-                case self::USE_MASKED_INPUT_WIDGET_PHONE:
-                    $config = [
-                            
-                            'mask' => '+7(999)999-99-99',
-                            //'options' => ['class'=>'inputPhone',],
-                            'name' => 'input37',
-                            'options' => [
-                                'class' => 'form-control addInput',
-                                
-                            ]
-                        ];
-                    //$field->inputOptions = ['crc32'=>$this->initClientOptions($config)];
-                    $config['options']['crc32'] = $this->initClientOptions($config);
-                    //var_dump($this->initClientOptions($config));
-                    $field->widget(\yii\widgets\MaskedInput::className(), $config);
-                    
-                    break;
-                case self::USE_MASKED_INPUT_WIDGET_URL:
-                    $config = [
-                            'clientOptions' => [
-                                'alias' => 'url',
-                            
-                            ],
-                            //'options' => ['class'=>'inputPhone',],
-                            'name' => 'input37',
-                            'options' => [
-                                'class' => 'form-control addInput',
-                            ]
-                        ];
-                    $config['options']['crc32'] = $this->initClientOptions($config);
-                    $field->widget(\yii\widgets\MaskedInput::className(), $config);
-                    
-                    break;
-                case self::USE_MASKED_INPUT_WIDGET_MAIL:
-                    $config = [
-                            'clientOptions' => [
-                                'alias' => 'email',
-                            
-                            ],
-                            //'options' => ['class'=>'inputPhone',],
-                            'name' => 'input37',
-                            'options' => [
-                                'class' => 'form-control addInput',
-                            ]
-                        ];
-                    $config['options']['crc32'] = $this->initClientOptions($config);
-                    $field->widget(\yii\widgets\MaskedInput::className(), $config);
-                    
-                    break;
+            //$widget = self::DONT_USE_WIDGET;
+            $result .= $this->createPole($widget, $model, $nameAttrib, 0, $whatShow);
+        } else {
+            foreach ($model[$nameAttrib] as $key => $value) {
+                $result .= $this->createPole($widget, $model, $nameAttrib, $key, $whatShow);
             }
-            $result .= $field;
+        
         }
         return Html::tag("div", $result, ['id'=>'div_'.mb_strtolower($nameAttrib)]);
     }
@@ -183,5 +132,61 @@ SCRIPT;
         }
         $encOptions = empty($options['clientOptions']) ? '{}' : Json::encode($options['clientOptions']);
         return hash('crc32', $encOptions);
+    }
+    
+    
+    public function createPole($widget, $model, $nameAttrib, $key, $whatShow)
+    {
+        $field = $this->field($model, $nameAttrib . '[' . $key . ']')->textInput()->label(false);
+        $config = array();
+        switch ($widget) {
+            case self::DONT_USE_WIDGET:
+                break;
+            case self::USE_AJAX_AUTOCOMPLETE:
+                $field = $this->addAjaxWidget($field, $whatShow);
+                break;
+            case self::USE_MASKED_INPUT_WIDGET_PHONE:
+                $config = [
+                        
+                        'mask' => '+7(999)999-99-99',
+                        //'options' => ['class'=>'inputPhone',],
+                        'name' => 'input37',
+                        'options' => [
+                            'class' => 'form-control addInput',             
+                            ]
+                        ];
+                    $config['options']['crc32'] = $this->initClientOptions($config);
+                    $field->widget(\yii\widgets\MaskedInput::className(), $config);
+                    break;
+            case self::USE_MASKED_INPUT_WIDGET_URL:
+                $config = [
+                    'clientOptions' => [
+                        'alias' => 'url',
+                    ],
+                    'name' => 'input37',
+                    'options' => [
+                        'class' => 'form-control addInput',
+                    ]
+                ];
+                $config['options']['crc32'] = $this->initClientOptions($config);
+                $field->widget(\yii\widgets\MaskedInput::className(), $config);
+                break;
+            case self::USE_MASKED_INPUT_WIDGET_MAIL:
+                $config = [
+                    'clientOptions' => [
+                        'alias' => 'email',
+                    ],
+                            //'options' => ['class'=>'inputPhone',],
+                    'name' => 'input37',
+                    'options' => [
+                        'class' => 'form-control addInput',
+                    ]
+                ];
+                $config['options']['crc32'] = $this->initClientOptions($config);
+                $field->widget(\yii\widgets\MaskedInput::className(), $config);
+                    
+                break;
+            }
+            return $field; 
     }
 }

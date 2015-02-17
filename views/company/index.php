@@ -26,14 +26,14 @@ $this->params['breadcrumbs'][] = $this->title;
      
     <?php
         
-        $url = \yii\helpers\Url::to(['list-category']);
-        $url2 = \yii\helpers\Url::to(['list-user']);
-        $url3 = \yii\helpers\Url::to(['list-trademark']);
+        $url = \yii\helpers\Url::to(['list', 'name' => 'category']);
+        $url2 = \yii\helpers\Url::to(['list', 'name' => 'user']);
+        $url3 = \yii\helpers\Url::to(['list', 'name' => 'trademark']);
         $initScript2 = <<< SCRIPT
             function (element, callback) {
                 var id=\$(element).val();
                 if (id !== "") {
-                    \$.ajax("{$url2}?id=" + id, {
+                    \$.ajax("{$url2}&id=" + id, {
                         dataType: "json"
                     }).done(function(data) { callback(data.results);});
                 }
@@ -43,7 +43,7 @@ SCRIPT;
             function (element, callback) {
                 var id=\$(element).val();
                 if (id !== "") {
-                    \$.ajax("{$url}?id=" + id, {
+                    \$.ajax("{$url}&id=" + id, {
                         dataType: "json"
                     }).done(function(data) { callback(data.results);});
                 }
@@ -53,7 +53,7 @@ SCRIPT;
             function (element, callback) {
                 var id=\$(element).val();
                 if (id !== "") {
-                    \$.ajax("{$url3}?id=" + id, {
+                    \$.ajax("{$url3}&id=" + id, {
                         dataType: "json"
                     }).done(function(data) { callback(data.results);});
                 }

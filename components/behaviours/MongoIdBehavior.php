@@ -39,11 +39,15 @@ class MongoIdBehavior extends Behavior
                 $arr = $this->owner->{$value};
                 if (is_array($arr)) {
                     foreach ($arr as $key => $value2) {
-                        var_dump($arr);
-                        $arr[$key] = new \MongoId($value2);
+                        //var_dump($arr);
+                        if ($value2!='' && $value2!=null) {
+                            $arr[$key] = new \MongoId($value2);
+                        }
                     }
                 } else {
-                    $arr = new \MongoId($arr);
+                    if ($arr!='' && $arr!=null) {
+                        $arr = new \MongoId($arr);
+                    }
                 }
                 $this->owner->{$value} = $arr;
             }
