@@ -102,7 +102,11 @@ class CompanyController extends Controller
     {
         $model = new Company();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            log($model->load(Yii::$app->request->post()));
+            return \app\widgetExt\ExtActiveForm::validate($model);
+        } elseif ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => (string)$model->_id]);
         } else {
             return $this->render('create', [

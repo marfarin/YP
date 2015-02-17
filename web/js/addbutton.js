@@ -23,9 +23,15 @@ function addButton(element)
     clone.children("input[id]").val('');
     var m32 = clone.children("input[id]");
     clone.appendTo('#div_'+nameClassAddedFieldLower);
-    
+    var settings = $('#form_new_company').data('yiiActiveForm');
+    settings.attributes.push({
+        "id":"company-phone_numbers-1","name":"phone_numbers[1]","container":".field-company-phone_numbers-1","input":"#company-phone_numbers-1","enableAjaxValidation":true,"validateOnBlur":false
+    });
+    $('#form_new_company').data('yiiActiveForm', settings);
     jQuery(document).ready(function() {
         $('#company-'+nameClassAddedField+'-'+(parseInt(val))).inputmask(window['inputmask_'+crc32]);
+        //jQuery('#form_new_company').yiiActiveForm([{"id":"company-phone_numbers-1","name":"phone_numbers[1]","container":".field-company-phone_numbers-1","input":"#company-phone_numbers-1","enableAjaxValidation":true,"validateOnBlur":false}], []);
+        //jQuery('#form_new_company').yiiActiveForm([{"id":"company-"+nameClassAddedFieldLower+"-"+(parseInt(val)),"name":nameClassAddedFieldLower+"["+(parseInt(val))+"]","container":".field-company-"+nameClassAddedFieldLower+"-"+(parseInt(val)),"input":"#company-"+nameClassAddedField+"-"+(parseInt(val)),"enableAjaxValidation":true,"validateOnBlur":false}], []);
     });
     //$('#company-'+nameClassAddedField+'-'+(parseInt(val))).inputmask(inputmask_)
     

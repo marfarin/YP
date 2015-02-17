@@ -52,7 +52,6 @@ class ExtActiveForm extends ActiveForm
         $button = Html::button(
             'Add more '.$model->attributeLabels()[$nameAttrib],
             $configButton
-            
         );
         $counter = count($model[$nameAttrib]);
         if ($counter == 0) {
@@ -148,13 +147,12 @@ SCRIPT;
             case self::USE_MASKED_INPUT_WIDGET_PHONE:
                 $config = [
                         
-                        'mask' => '+7(999)999-99-99',
-                        //'options' => ['class'=>'inputPhone',],
-                        'name' => 'input37',
-                        'options' => [
-                            'class' => 'form-control addInput',             
-                            ]
-                        ];
+                    'mask' => '+7(999)999-99-99',
+                    'name' => 'input37',
+                    'options' => [
+                        'class' => 'form-control addInput',
+                    ]
+                ];
                     $config['options']['crc32'] = $this->initClientOptions($config);
                     $field->widget(\yii\widgets\MaskedInput::className(), $config);
                     break;
@@ -186,7 +184,7 @@ SCRIPT;
                 $field->widget(\yii\widgets\MaskedInput::className(), $config);
                     
                 break;
-            }
-            return $field; 
+        }
+        return $field;
     }
 }
