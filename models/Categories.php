@@ -133,10 +133,15 @@ class Categories extends \yii\mongodb\ActiveRecord
         if ($name == null) {
             return null;
         }
-        return self::find()
+        $result = self::find()
             ->select(['_id'])
             ->andFilterWhere(['like', 'name', $name])
             ->asArray()
-            ->all()[0];
+            ->all();
+        if (empty($result)) {
+            return $name;
+        } else {
+            return $result[0];
+        }
     }
 }

@@ -3,7 +3,7 @@
 namespace app\models;
 
 use Yii;
-use app\behaviours\DateTimeBehavior;
+use app\components\behaviours\DateTimeBehavior;
 use yii\mongodb\ActiveRecord;
 
 /**
@@ -43,6 +43,9 @@ class Company extends ActiveRecord
         return [
             [
                 'class' => DateTimeBehavior::className(),
+            ],
+            [
+                'class' => \app\components\behaviours\MongoIdBehavior::className(),
             ],
         ];
     }
@@ -86,7 +89,7 @@ class Company extends ActiveRecord
             'postcode',
             'type',
             'parentID',
-            'branchParentID',
+            'tradeMarkId',
             'tbl_category.name',
             'tbl_user.name',
         ];
@@ -125,7 +128,7 @@ class Company extends ActiveRecord
             'postcode' => Yii::t('app', 'Postcode'),
             'type' => Yii::t('app', 'Type'),
             'parentID' => Yii::t('app', 'Parent ID'),
-            'branchParentID' => Yii::t('app', 'Branch Parent ID'),
+            'tradeMarkId' => Yii::t('app', 'Branch Parent ID'),
             'tbl_category.name' => Yii::t('app', 'Branch Parent ID'),
             'tbl_user.name' => Yii::t('app', 'Branch Parent ID'),
         ];
@@ -139,6 +142,11 @@ class Company extends ActiveRecord
     public function getUser()
     {
         return $this->hasOne(Users::className(), ['_id'=>'user_id']);
+    }
+    
+    public function getTrademark()
+    {
+        return $this->hasOne(TradeMark::className(), ['_id'=>'tradeMarkId']);
     }
     
     /**
@@ -155,7 +163,7 @@ class Company extends ActiveRecord
             ['email', 'validateEmail'],
             ['url', 'validateUrl'],
             //['name', 'string', 'max'=>9],
-            [['name', 'legal_form', 'legal_name', 'sphere', 'company_size', 'address_id', 'address_addition', 'phone_numbers', 'short_phone_numbers', 'hr_phone_numbers', 'fax_numbers', 'email', 'url', 'working_time', 'update_time', 'user_id', 'branch_name', 'description', 'status', 'wants_placement', 'export_to_yandex', 'postcode', 'type', 'parentID', 'branchParentID'], 'safe']
+            [['name', 'legal_form', 'legal_name', 'sphere', 'company_size', 'address_id', 'address_addition', 'phone_numbers', 'short_phone_numbers', 'hr_phone_numbers', 'fax_numbers', 'email', 'url', 'working_time', 'update_time', 'user_id', 'branch_name', 'description', 'status', 'wants_placement', 'export_to_yandex', 'postcode', 'type', 'parentID', 'tradeMarkId'], 'safe']
         ];
     }
     

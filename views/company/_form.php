@@ -90,7 +90,9 @@ use app\widgetExt\ExtActiveForm;
     <?= $form->field($model, 'export_to_yandex')->dropDownList([0=>'НЕТ',1=>'ДА']) ?>
 
     <?php
-        echo $form->showMultipleForm('branchParentID', $model, ExtActiveForm::NOT_SHOW_ADD_BUTTON, ExtActiveForm::USE_AJAX_AUTOCOMPLETE, 'company');
+        //echo $form->field($model, 'tradeMarkId')->textInput()->;
+        echo $form->addAjaxWidget($form->field($model, 'tradeMarkId')->textInput(), 'trademark');
+        //echo $form->showMultipleForm('tradeMarkId', $model, ExtActiveForm::NOT_SHOW_ADD_BUTTON, ExtActiveForm::USE_AJAX_AUTOCOMPLETE, 'company');
         echo $form->showMultipleForm('parentID', $model, ExtActiveForm::SHOW_ADD_BUTTON, ExtActiveForm::USE_AJAX_AUTOCOMPLETE, 'category');
     ?>
 

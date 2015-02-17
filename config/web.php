@@ -58,7 +58,8 @@ $config = [
                     'users'=>'users/index',
                     'category'=>'category/index',
                     'company'=>'company/index',
-                    'company/list'=>'company/list'
+                    'company/list'=>'company/list',
+                    'trademark' => 'trade-mark/index'
                     //'debug/<controller>/<action>' => 'debug/<controller>/<action>',
 
                 ],

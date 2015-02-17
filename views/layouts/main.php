@@ -40,6 +40,7 @@ AppAsset::register($this);
                     ['label' => 'Пользователи', 'url' => ['/users']],
                     ['label' => 'Категории', 'url' => ['/category']],
                     ['label' => 'Компании', 'url' => ['/company']],
+                    ['label' => 'Бренды', 'url' => ['/trademark']],
                     Yii::$app->user->isGuest ?
                         ['label' => 'Войти', 'url' => ['/site/login']] :
                         ['label' => 'Выйти (' . Yii::$app->user->identity->name . ')',

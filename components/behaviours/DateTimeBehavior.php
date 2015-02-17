@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace app\behaviours;
+namespace app\components\behaviours;
 
 use Yii;
 use yii\base\Behavior;
@@ -28,6 +28,7 @@ class DateTimeBehavior extends Behavior
     {
         return [
             ActiveRecord::EVENT_BEFORE_INSERT => 'setUpdateTime',
+            ActiveRecord::EVENT_BEFORE_UPDATE => 'setUpdateTime',
         ];
     }
     

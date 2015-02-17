@@ -23,7 +23,7 @@ class CompanySearch extends Company
     public function rules()
     {
         return [
-            [['_id', 'name', 'legal_form', 'legal_name', 'sphere', 'company_size', 'address_id', 'address_addition', 'phone_numbers', 'short_phone_numbers', 'hr_phone_numbers', 'fax_numbers', 'email', 'url', 'working_time', 'update_time', 'user_id', 'branch_name', 'description', 'status', 'wants_placement', 'export_to_yandex', 'postcode', 'type', 'parentID', 'branchParentID','category', 'user'], 'safe'],
+            [['_id', 'name', 'legal_form', 'legal_name', 'sphere', 'company_size', 'address_id', 'address_addition', 'phone_numbers', 'short_phone_numbers', 'hr_phone_numbers', 'fax_numbers', 'email', 'url', 'working_time', 'update_time', 'user_id', 'branch_name', 'description', 'status', 'wants_placement', 'export_to_yandex', 'postcode', 'type', 'parentID', 'tradeMarkId','category', 'user'], 'safe'],
         ];
     }
 
@@ -45,7 +45,7 @@ class CompanySearch extends Company
      */
     public function search($params)
     {
-        $query = Company::find()->with('user')->with('category');
+        $query = Company::find()->with('user')->with('category')->with('trademark');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -59,6 +59,16 @@ class CompanySearch extends Company
             // $query->where('0=1');
             return $dataProvider;
         }
+        if($this->parentID && $this->parentID !='' && $this->parentID!=null) {
+            $this->parentID = new \MongoId($this->parentID);
+        }
+        if($this->user_id && $this->user_id !='' && $this->user_id!=null) {
+            $this->user_id = new \MongoId($this->user_id);
+        }
+        if($this->tradeMarkId && $this->tradeMarkId !='' && $this->tradeMarkId!=null) {
+            $this->tradeMarkId = new \MongoId($this->tradeMarkId);
+        }
+        //var_dump($this->parentID);
         //var_dump(Categories::findCategoryByName($this->category));
         $query->andFilterWhere(['like', '_id', $this->_id])
             ->andFilterWhere(['like', 'name', $this->name])
@@ -76,7 +86,7 @@ class CompanySearch extends Company
             ->andFilterWhere(['like', 'url', $this->url])
             ->andFilterWhere(['like', 'working_time', $this->working_time])
             ->andFilterWhere(['like', 'update_time', $this->update_time])
-            ->andFilterWhere(['like', 'user_id', $this->user_id])
+            ->andFilterWhere(['user_id' => $this->user_id])
             ->andFilterWhere(['like', 'branch_name', $this->branch_name])
             ->andFilterWhere(['like', 'description', $this->description])
             ->andFilterWhere(['like', 'status', $this->status])
@@ -84,10 +94,8 @@ class CompanySearch extends Company
             ->andFilterWhere(['export_to_yandex'=>$this->export_to_yandex])
             ->andFilterWhere(['like', 'postcode', $this->postcode])
             ->andFilterWhere(['like', 'type', $this->type])
-            ->andFilterWhere(['like', 'parentID', $this->parentID])
-            ->andFilterWhere(['like', 'branchParentID', $this->branchParentID])
-            ->andFilterWhere(['in', 'user_id', Users::findUserByName($this->user)])
-            ->andFilterWhere(['in', 'parentID', Categories::findCategoryByName($this->category)]);
+            ->andFilterWhere(['parentID' => $this->parentID])
+            ->andFilterWhere(['tradeMarkId'=> $this->tradeMarkId]);
         //var_dump($dataProvider);
         return $dataProvider;
     }

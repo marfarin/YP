@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use kartik\dynagrid\DynaGrid;
 use kartik\grid\GridView;
+use yii\web\JsExpression;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\CompanySearch */
@@ -24,6 +25,40 @@ $this->params['breadcrumbs'][] = $this->title;
 
      
     <?php
+        
+        $url = \yii\helpers\Url::to(['list-category']);
+        $url2 = \yii\helpers\Url::to(['list-user']);
+        $url3 = \yii\helpers\Url::to(['list-trademark']);
+        $initScript2 = <<< SCRIPT
+            function (element, callback) {
+                var id=\$(element).val();
+                if (id !== "") {
+                    \$.ajax("{$url2}?id=" + id, {
+                        dataType: "json"
+                    }).done(function(data) { callback(data.results);});
+                }
+            }
+SCRIPT;
+            $initScript = <<< SCRIPT
+            function (element, callback) {
+                var id=\$(element).val();
+                if (id !== "") {
+                    \$.ajax("{$url}?id=" + id, {
+                        dataType: "json"
+                    }).done(function(data) { callback(data.results);});
+                }
+            }
+SCRIPT;
+            $initScript3 = <<< SCRIPT
+            function (element, callback) {
+                var id=\$(element).val();
+                if (id !== "") {
+                    \$.ajax("{$url3}?id=" + id, {
+                        dataType: "json"
+                    }).done(function(data) { callback(data.results);});
+                }
+            }
+SCRIPT;
         $queryStatus = \app\models\Company::find()->asArray()->distinct('status');
         $queryCompanySize = \app\models\Company::find()->asArray()->distinct('company_size');
         $createButton = Html::a(Yii::t('app', 'Create {modelClass}', [
@@ -152,7 +187,22 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'postcode',
             [
-                'attribute' => 'category',
+                'filterType' => GridView::FILTER_SELECT2,
+                'filterWidgetOptions'=>[
+                    'pluginOptions'=>
+                    [
+                        'allowClear'=>true,
+                        'minimumInputLength' => 3,
+                        'ajax' => [
+                            'url' => $url,
+                            'dataType' => 'json',
+                            'data' => new JsExpression('function(term,page) { return {search:term}; }'),
+                            'results' => new JsExpression('function(data,page) { return {results:data.results}; }'),
+                        ],
+                        'initSelection' => new JsExpression($initScript)
+                    ],
+                ],
+                'attribute' => 'parentID',
                 'value'=>function ($model, $key, $index, $widget) {
                     $result = "";
                     foreach ($model->category as $value) {
@@ -164,8 +214,46 @@ $this->params['breadcrumbs'][] = $this->title;
                 'vAlign'=>'middle',
             ],
             [
-                'attribute' => 'user',
-                'value'=>'user.name'
+                'filterType' => GridView::FILTER_SELECT2,
+                'filterWidgetOptions'=>[
+                    'pluginOptions'=>
+                    [
+                        'allowClear'=>true,
+                        'minimumInputLength' => 3,
+                        'ajax' => [
+                            'url' => $url3,
+                            'dataType' => 'json',
+                            'data' => new JsExpression('function(term,page) { return {search:term}; }'),
+                            'results' => new JsExpression('function(data,page) { return {results:data.results}; }'),
+                        ],
+                        'initSelection' => new JsExpression($initScript3)
+                    ],
+                ],
+                'value'=>'trademark.name',
+                'format'=>'raw',
+                'vAlign'=>'middle',
+                'attribute' => 'tradeMarkId',
+            ],
+            [
+                'filterType' => GridView::FILTER_SELECT2,
+                'filterWidgetOptions'=>[
+                    'pluginOptions'=>
+                    [
+                        'allowClear'=>true,
+                        'minimumInputLength' => 3,
+                        'ajax' => [
+                            'url' => $url2,
+                            'dataType' => 'json',
+                            'data' => new JsExpression('function(term,page) { return {search:term}; }'),
+                            'results' => new JsExpression('function(data,page) { return {results:data.results}; }'),
+                        ],
+                        'initSelection' => new JsExpression($initScript2)
+                    ],
+                ],
+                'value'=>'user.name',
+                'format'=>'raw',
+                'vAlign'=>'middle',
+                'attribute' => 'user_id',
             ],
 
             [

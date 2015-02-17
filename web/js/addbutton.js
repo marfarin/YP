@@ -40,8 +40,9 @@ function addMultipleButton(element)
     var nameClassAddedFieldLower = nameClassAddedField.toLowerCase();
     var counterAddedFieldName = '#counter_'+nameClassAddedFieldLower+'';
     var val = $(counterAddedFieldName).val();
-    var inputTextClassFieldId = '#company-'+nameClassAddedField+'-'+(parseInt(val)-1);
-    var classParentDivTextField = '.field-company-'+nameClassAddedFieldLower+'-'+(parseInt(val)-1);
+    var inputTextClassFieldId = '#company-'+nameClassAddedFieldLower+'-'+(parseInt(val)-1);
+    var classParentDivTextField = 'field-company-'+nameClassAddedFieldLower+'-'+(parseInt(val)-1);
+    var desk = $(inputTextClassFieldId).attr("data-krajee-select2");
     var parentDiv = document.createElement("div");
     parentDiv.className = "form-group field-company-"+nameClassAddedFieldLower+"-"+(parseInt(val))+" required";
     var divKvPlugin = document.createElement("div");
@@ -55,10 +56,10 @@ function addMultipleButton(element)
     input.value = "";
     input.style = "width:100%";
     input.setAttribute("placeholder", "Поиск родительских компаний");
-    input.setAttribute("data-krajee-select2", "select2_00a376fa");
+    input.setAttribute("data-krajee-select2", desk);
     var help = document.createElement("div");
     help.className = "help-block";
-    if(classParentDivTextField === '.field-company-parentid-'+(parseInt(val)-1)) {
+    if(classParentDivTextField === 'field-company-parentid-'+(parseInt(val)-1)) {
         parentDiv.appendChild(divKvPlugin);
         parentDiv.appendChild(input);
         parentDiv.appendChild(help);
@@ -66,7 +67,7 @@ function addMultipleButton(element)
         $('#div_'+nameClassAddedFieldLower).append(parentDiv);
         $(counterAddedFieldName).val(parseInt(val) + 1);
         jQuery(document).ready(function() {
-            jQuery.when(jQuery('#company-'+nameClassAddedFieldLower+'-'+(parseInt(val))).select2(select2_00a376fa)).done(initSelect2Loading('company-'+nameClassAddedFieldLower +'-'+(parseInt(val))));
+            jQuery.when(jQuery('#company-'+nameClassAddedFieldLower+'-'+(parseInt(val))).select2(window[desk])).done(initSelect2Loading('company-'+nameClassAddedFieldLower +'-'+(parseInt(val))));
             jQuery('#company-'+nameClassAddedFieldLower+'-'+(parseInt(val))).on('select2-open', function(){initSelect2DropStyle('company-'+nameClassAddedFieldLower+'-'+(parseInt(val)))});
         });
     }

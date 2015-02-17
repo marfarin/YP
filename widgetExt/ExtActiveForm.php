@@ -137,12 +137,12 @@ class ExtActiveForm extends ActiveForm
     
     public function addAjaxWidget($field, $whatShow = 'company')
     {
-        $url = \yii\helpers\Url::to(['list-'.$whatShow]);
+        $url = \yii\helpers\Url::to(['list', 'name' => $whatShow]);
         $initScript = <<< SCRIPT
             function (element, callback) {
                 var id=\$(element).val();
                 if (id !== "") {
-                    \$.ajax("{$url}?id=" + id, {
+                    \$.ajax("{$url}&id=" + id, {
                         dataType: "json"
                     }).done(function(data) { callback(data.results);});
                 }
