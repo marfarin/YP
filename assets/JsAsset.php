@@ -1,8 +1,9 @@
 <?php
-/**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 
 namespace app\assets;
@@ -10,22 +11,22 @@ namespace app\assets;
 use yii\web\AssetBundle;
 
 /**
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since 2.0
+ * Description of JsAsset
+ *
+ * @author stager3
  */
-class AppAsset extends AssetBundle
+class JsAsset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
-    public $css = [
-        'css/site.css',
-    ];
-    /*public $js = [
+    
+    public $js = [
         'js/jstree/_lib/jquery.cookie.js',
         'js/jstree/_lib/jquery.hotkeys.js',
         'js/jstree/jquery.jstree.js',
         'js/jstree/rubricsTree.js',
-    ];*/
+    ];
+    
     public $depends = [
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',

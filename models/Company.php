@@ -139,12 +139,12 @@ class Company extends ActiveRecord
     
     public function getCategory()
     {
-        return $this->hasMany(Categories::className(), ['_id'=>'parentID']);
+        return $this->hasMany(Category::className(), ['_id'=>'parentID']);
     }
     
     public function getUser()
     {
-        return $this->hasOne(Users::className(), ['_id'=>'user_id']);
+        return $this->hasOne(User::className(), ['_id'=>'user_id']);
     }
     
     public function getTrademark()

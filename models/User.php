@@ -14,7 +14,7 @@ use yii\mongodb\ActiveRecord;
  * @property mixed $password
  * @property mixed $role
  */
-class Users extends ActiveRecord implements \yii\web\IdentityInterface
+class User extends ActiveRecord implements \yii\web\IdentityInterface
 {
     const ROLE_ROOT   = 'root';
     const ROLE_ADMIN  = 'admin';

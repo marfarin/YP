@@ -5,9 +5,9 @@ namespace app\controllers;
 use Yii;
 use app\models\Company;
 use app\models\CompanySearch;
-use app\models\Users;
+use app\models\User;
 use yii\web\Controller;
-use app\models\Categories;
+use app\models\Category;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -177,100 +177,6 @@ class CompanyController extends Controller
         }
     }
     
-    protected function findRubric($id)
-    {
-        if (($model = Categories::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
-    }
-    
-    public function actionListCompany($search = null, $id = null)
-    {
-        $map = array();
-        $out = ['more' => false];
-        if (!is_null($search)) {
-            $data = Company::find()->select(['name'])->where(['like', 'name', $search])->asArray()->limit(20)->all();
-            foreach ($data as $key => $value) {
-                $map[$key]['id'] = (string)$value['_id'];
-                $map[$key]['text'] = (string)$value['name'];
-            }
-            $out['results'] = array_values($map);
-        } elseif ($id > 0) {
-            $out['results'] = ['id' => $id, 'text' => Company::find()->asArray()->where(['_id'=>$id])->one()['name']];
-        } else {
-            $out['results'] = ['id' => 0, 'text' => 'No matching records found'];
-        }
-        echo \yii\helpers\Json::encode($out);
-    }
-    
-    public function actionListCategory($search = null, $id = null)
-    {
-        $map = array();
-        $out = ['more' => false];
-        if (!is_null($search)) {
-            $data = Categories::find()->select(['name'])->where(['like', 'name', $search])->asArray()->limit(20)->all();
-            foreach ($data as $key => $value) {
-                $map[$key]['id'] = (string)$value['_id'];
-                $map[$key]['text'] = (string)$value['name'];
-            }
-            $out['results'] = array_values($map);
-            
-        } elseif ($id > 0) {
-            //var_dump(Categories::find(new \MongoId($id))->asArray()->one());
-            $out['results'] = ['id' => $id, 'text' => Categories::find()->asArray()->where(['_id'=>$id])->one()['name']];
-        } else {
-            $out['results'] = ['id' => 0, 'text' => 'No matching records found'];
-        }
-        //var_dump('$value');
-        echo \yii\helpers\Json::encode($out);
-    }
-    
-    public function actionListUser($search = null, $id = null)
-    {
-        $map = array();
-        $out = ['more' => false];
-        if (!is_null($search)) {
-            $data = Users::find()->select(['name'])->where(['like', 'name', $search])->asArray()->limit(20)->all();
-            foreach ($data as $key => $value) {
-                $map[$key]['id'] = (string)$value['_id'];
-                $map[$key]['text'] = (string)$value['name'];
-            }
-            $out['results'] = array_values($map);
-            
-        } elseif ($id > 0) {
-            //var_dump(Categories::find(new \MongoId($id))->asArray()->one());
-            $out['results'] = ['id' => $id, 'text' => Users::find()->asArray()->where(['_id'=>$id])->one()['name']];
-        } else {
-            $out['results'] = ['id' => 0, 'text' => 'No matching records found'];
-        }
-        //var_dump('$value');
-        echo \yii\helpers\Json::encode($out);
-    }
-    
-    public function actionListTrademark($search = null, $id = null)
-    {
-        $map = array();
-        $out = ['more' => false];
-        if (!is_null($search)) {
-            $data = \app\models\TradeMark::find()->select(['name'])->where(['like', 'name', $search])->asArray()->limit(20)->all();
-            foreach ($data as $key => $value) {
-                $map[$key]['id'] = (string)$value['_id'];
-                $map[$key]['text'] = (string)$value['name'];
-            }
-            $out['results'] = array_values($map);
-            
-        } elseif ($id > 0) {
-            //var_dump(Categories::find(new \MongoId($id))->asArray()->one());
-            $out['results'] = ['id' => $id, 'text' => \app\models\TradeMark::find()->asArray()->where(['_id'=>$id])->one()['name']];
-        } else {
-            $out['results'] = ['id' => 0, 'text' => 'No matching records found'];
-        }
-        //var_dump('$value');
-        echo \yii\helpers\Json::encode($out);
-    }
-    
     public function actionListAddress($search = null, $id = null)
     {
         $map = array();
@@ -299,18 +205,18 @@ class CompanyController extends Controller
         switch ($name) {
             case self::USER:
                 if (!is_null($search)) {
-                    $data = Users::find()->select(['name'])->where(['like', 'name', $search])->asArray()->limit(20)->all();
+                    $data = User::find()->select(['name'])->where(['like', 'name', $search])->asArray()->limit(20)->all();
                 }
                 if ($id!=null) {
-                    $text = Users::find()->asArray()->where(['_id'=>$id])->one()['name'];
+                    $text = User::find()->asArray()->where(['_id'=>$id])->one()['name'];
                 }
                 break;
             case self::CATEGORY:
                 if (!is_null($search)) {
-                    $data = Categories::find()->select(['name'])->where(['like', 'name', $search])->asArray()->limit(20)->all();
+                    $data = Category::find()->select(['name'])->where(['like', 'name', $search])->asArray()->limit(20)->all();
                 }
                 if ($id!=null) {
-                    $text = Categories::find()->asArray()->where(['_id'=>$id])->one()['name'];
+                    $text = Category::find()->asArray()->where(['_id'=>$id])->one()['name'];
                 }
                 break;
             case self::TRADEMARK:

@@ -37,10 +37,11 @@ AppAsset::register($this);
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'items' => [
                     ['label' => 'Домой', 'url' => ['/']],
-                    ['label' => 'Пользователи', 'url' => ['/users']],
-                    ['label' => 'Категории', 'url' => ['/category']],
-                    ['label' => 'Компании', 'url' => ['/company']],
-                    ['label' => 'Бренды', 'url' => ['/trademark']],
+                    (Yii::$app->authManager->checkAccess((string)Yii::$app->user->getId(), 'admin')) ? 
+                        ['label' => 'Пользователи', 'url' => ['/users']]:
+                        ['label' => 'Категории', 'url' => ['/category']],
+                        ['label' => 'Компании', 'url' => ['/company']],
+                        ['label' => 'Бренды', 'url' => ['/trademark']],
                     Yii::$app->user->isGuest ?
                         ['label' => 'Войти', 'url' => ['/site/login']] :
                         ['label' => 'Выйти (' . Yii::$app->user->identity->name . ')',

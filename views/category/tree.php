@@ -8,8 +8,10 @@ use yii\widgets\DetailView;
 
 $this->title = 'Categories';
 $this->params['breadcrumbs'][] = $this->title;
-//$this->params['breadcrumbs'][] = $this->title;
-
+$this->registerAssetBundle(\app\assets\JsAsset::className(), \yii\web\View::POS_HEAD);
+//$this->js;
+//var_dump($this->assetBundles);
+//var_dump($this->registerAssetBundle(\app\assets\JsAsset::className(), \yii\web\View::POS_HEAD));
 ?>
 <div class="categories-tree">
 

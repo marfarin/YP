@@ -12,8 +12,10 @@ use yii\web\JsExpression;
 $this->title = Yii::t('app', 'Companies');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="company-index" data-pjax="0">
-
+<div class="company-index">
+<style>
+   html { overflow-x:  hidden; }
+</style>
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
@@ -267,12 +269,18 @@ SCRIPT;
             'theme' => 'panel-info',
             'showPersonalize'=>true,
             'storage'=>'cookie',
+            
             'gridOptions' => [
                 'dataProvider' => $dataProvider,
                 'filterModel' => $searchModel,
                 'showPageSummary' => false,
                 'floatHeader' => true,
-                'pjax' => true,               
+                'condensed' => true,
+                'hover' => true,
+                'pjax' => true,
+                'tableOptions' => [
+                    'overflow' => false,
+                ],
                 'toolbar' =>  [
                     [
                         'content' => $createButton

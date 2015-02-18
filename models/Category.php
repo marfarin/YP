@@ -12,7 +12,7 @@ use Yii;
  * @property mixed $type
  * @property mixed $parentID
  */
-class Categories extends \yii\mongodb\ActiveRecord
+class Category extends \yii\mongodb\ActiveRecord
 {
     /**
      * @inheritdoc
@@ -99,22 +99,6 @@ class Categories extends \yii\mongodb\ActiveRecord
                 }
             }
         }
-
-        /* if ($parentId == null) {
-            //$root = Rubric::model()->findByPk(0);
-            $children = array(
-            "data" => array(
-            'title'=>"name",
-            ),
-            "attr" => array(
-            'id'=>0,
-            ),
-            "children" => $children,
-            "state" => $children ? 'open' : '',
-                                                    //"attr" => array("rel"=>"readonly")
-            );
-        }*/
-        //var_dump($children);
         return json_encode($children);
     }
     

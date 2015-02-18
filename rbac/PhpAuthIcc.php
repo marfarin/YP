@@ -10,7 +10,7 @@ namespace app\rbac;
 
 use Yii;
 use yii\rbac\PhpManager;
-use app\models\Users;
+use app\models\User;
 use yii\base\InvalidParamException;
 use yii\rbac\Assignment;
 
@@ -27,7 +27,7 @@ class PhpAuthIcc extends PhpManager
         try {
             return isset($this->assignments[$userId]) ? $this->assignments[$userId] : [];
         } catch (\yii\base\ErrorException $e) {
-            $userBaseRole = Users::findIdentity($userId)['role'];
+            $userBaseRole = User::findIdentity($userId)['role'];
             if ($userBaseRole == false) {
                 throw new InvalidParamException("Unknown user ID '{$userId}'.");
             } else {

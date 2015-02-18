@@ -3,7 +3,7 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Categories;
+use app\models\Category;
 use app\models\CategorySearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -84,7 +84,7 @@ class CategoryController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Categories();
+        $model = new Category();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => (string)$model->_id]);
@@ -136,17 +136,13 @@ class CategoryController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Categories::findOne($id)) !== null) {
+        if (($model = Category::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
     
-    public function actionTest($parentId, $page = 1, $pageSize = 100)
-    {
-        echo Categories::initJsonTree($parentId, $page, $pageSize);
-    }
     
     public function actionTree()
     {

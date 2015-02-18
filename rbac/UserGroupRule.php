@@ -49,7 +49,7 @@ class UserGroupRule extends Rule
     public function execute($user, $item, $params)
     {
         //Получаем массив пользователя из базы
-        $user = ArrayHelper::getValue($params, 'user', \app\models\Users::findOne($user));
+        $user = ArrayHelper::getValue($params, 'user', \app\models\User::findOne($user));
         if ($user) {
             $role = $user->role; //Значение из поля role базы данных
             if($item->name === 'root') {

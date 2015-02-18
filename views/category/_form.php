@@ -3,6 +3,8 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
+$this->registerAssetBundle(\app\assets\JsAsset::className());
+
 /* @var $this yii\web\View */
 /* @var $model app\models\Categories */
 /* @var $form yii\widgets\ActiveForm */
