@@ -5,14 +5,11 @@ namespace app\controllers;
 use Yii;
 use app\models\Company;
 use app\models\CompanySearch;
-use app\models\User;
 use yii\web\Controller;
-use app\models\Category;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\web\Response;
-use app\models\TradeMark;
 use consultnn\api\Address;
 
 /**
@@ -37,12 +34,12 @@ class CompanyController extends Controller
                 'rules' => [
                     //'class'=>  'app\rbac\rules',
                     [
-                        'actions' => ['index','view', 'autocomplete'],
+                        'actions' => ['index','view', 'autocomplete', 'list','list-address'],
                         'allow' => true,
                         'roles' => ['@','?'],
                     ],
                     [
-                        'actions' => ['create', 'update','phonebutton', 'list', 'list-company', 'list-category','list-user', 'list-address', 'list-trademark'],
+                        'actions' => ['create', 'update','phonebutton', ],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -52,9 +49,6 @@ class CompanyController extends Controller
                         'roles' => ['moderator'],
                     ],
                 ],
-            ],
-            [
-                'class' => \app\components\behaviours\ClearEmptyBehaviour::className(),
             ],
         ];
     }
@@ -131,17 +125,6 @@ class CompanyController extends Controller
         }
     }
     
-    
-    public function actionValidNewField($id)
-    {
-        $model = $this->findModel($id);
-        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            //var_dump($model);
-            return \app\widgetExt\ExtActiveForm::validate($model);
-        }
-    }
-
     /**
      * Deletes an existing Company model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -197,71 +180,6 @@ class CompanyController extends Controller
         $map = array();
         $out = ['more' => false];
         $name = "app\models\\".$name;
-        switch ($name) {
-            
-            default :
-                
-                if (!is_null($search)) {
-                    $data = $name::find()->select(['name'])->where(['like', 'name', $search])->asArray()->limit(20)->all();
-                }
-                if ($id!=null) {
-                    $text = $name::find()->asArray()->where(['_id'=>$id])->one()['name'];
-                }
-                break;
-            /*case self::USER:
-                $data = $name::find()->select(['name'])->where(['like', 'name', $search])->asArray()->limit(20)->all();
-                if (!is_null($search)) {
-                    $data = User::find()->select(['name'])->where(['like', 'name', $search])->asArray()->limit(20)->all();
-                }
-                if ($id!=null) {
-                    $text = User::find()->asArray()->where(['_id'=>$id])->one()['name'];
-                }
-                break;
-            case self::CATEGORY:
-                if (!is_null($search)) {
-                    $data = Category::find()->select(['name'])->where(['like', 'name', $search])->asArray()->limit(20)->all();
-                }
-                if ($id!=null) {
-                    $text = Category::find()->asArray()->where(['_id'=>$id])->one()['name'];
-                }
-                break;
-            case self::TRADEMARK:
-                if (!is_null($search)) {
-                    $data = TradeMark::find()->select(['name'])->where(['like', 'name', $search])->asArray()->limit(20)->all();
-                }
-                if ($id!=null) {
-                    $text = TradeMark::find()->asArray()->where(['_id'=>$id])->one()['name'];
-                }
-                break;
-            case self::COMPANY:
-                if (!is_null($search)) {
-                    $data = Company::find()->select(['name'])->where(['like', 'name', $search])->asArray()->limit(20)->all();
-                }
-                if ($id!=null) {
-                    $text = Company::find()->asArray()->where(['_id'=>$id])->one()['name'];
-                }
-                break;*/
-            case self::ADDRESS:
-                if (!is_null($search)) {
-                    $data = (new Address)->getIdByAddressName($search);
-                }
-                if ($id!=null) {
-                    $text = (new Address)->byAddressIds(array($id));
-                }
-                break;
-
-        }
-        if (!is_null($search)) {
-            foreach ($data as $key => $value) {
-                $map[$key]['id'] = (string)$value['_id'];
-                $map[$key]['text'] = (string)$value['name'];
-            }
-            $out['results'] = array_values($map);
-        } elseif ($id > 0) {
-            $out['results'] = ['id' => $id, 'text' => $text];
-        } else {
-            $out['results'] = ['id' => 0, 'text' => 'No matching records found'];
-        }
-        echo \yii\helpers\Json::encode($out);
+        return Company::dataAutocompleteList($name, $search, $id);
     }
 }

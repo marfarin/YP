@@ -83,7 +83,7 @@ class ExtActiveForm extends ActiveForm
         return Html::tag("div", $result, ['id'=>'div_'.mb_strtolower($nameAttrib)]);
     }
     
-    public function addAjaxWidget($field, $whatShow = 'company')
+    public function addAjaxWidget($field, $whatShow = 'Company')
     {
         $url = \yii\helpers\Url::to(['list', 'name' => $whatShow]);
         $initScript = <<< SCRIPT

@@ -23,8 +23,8 @@ use app\widgetExt\ExtActiveForm;
 
     
     
-    <?php 
-        $form = ExtActiveForm::begin(['id'=>'form_new_company', 
+    <?php
+        $form = ExtActiveForm::begin(['id'=>'form_new_company',
             'enableClientValidation' => false,
             'enableAjaxValidation' => true,
             'validateOnChange' => true,
@@ -33,15 +33,8 @@ use app\widgetExt\ExtActiveForm;
             
             
         ]);
-        //$form->validateOnBlur = true;
-        $queryStat = \app\models\Company::find()->asArray()->distinct('status');
-        $queryCompany = \app\models\Company::find()->asArray()->distinct('company_size');
-        $queryStat = array_combine(array_filter($queryStat), array_filter($queryStat));
-        $queryCompany = array_combine(array_filter($queryCompany), array_filter($queryCompany));
-        $queryCompanySize[''] = 'Не указано';
-        $queryStatus[''] = 'Не указано';
-        $queryCompanySize += $queryCompany;
-        $queryStatus += $queryStat;
+        $queryCompanySize = $model->getCompanySize();
+        $queryStatus = $model->getStatus();
         
     ?>
 
@@ -91,9 +84,9 @@ use app\widgetExt\ExtActiveForm;
 
     <?php
         //echo $form->field($model, 'tradeMarkId')->textInput()->;
-        echo $form->addAjaxWidget($form->field($model, 'tradeMarkId')->textInput(), 'trademark');
+        echo $form->addAjaxWidget($form->field($model, 'tradeMarkId')->textInput(), 'TradeMark');
         //echo $form->showMultipleForm('tradeMarkId', $model, ExtActiveForm::NOT_SHOW_ADD_BUTTON, ExtActiveForm::USE_AJAX_AUTOCOMPLETE, 'company');
-        echo $form->showMultipleForm('parentID', $model, ExtActiveForm::SHOW_ADD_BUTTON, ExtActiveForm::USE_AJAX_AUTOCOMPLETE, 'category');
+        echo $form->showMultipleForm('parentID', $model, ExtActiveForm::SHOW_ADD_BUTTON, ExtActiveForm::USE_AJAX_AUTOCOMPLETE, 'Category');
     ?>
 
     <?= $form->field($model, 'postcode') ?>

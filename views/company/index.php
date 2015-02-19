@@ -61,8 +61,8 @@ SCRIPT;
                 }
             }
 SCRIPT;
-        $queryStatus = \app\models\Company::find()->asArray()->distinct('status');
-        $queryCompanySize = \app\models\Company::find()->asArray()->distinct('company_size');
+        $queryStatus = $searchModel->getStatus();
+        $queryCompanySize = $searchModel->getCompanySize();
         $createButton = Html::a(Yii::t('app', 'Create {modelClass}', [
             'modelClass' => 'Company',
         ]), ['create'], ['class' => 'btn btn-succes']);
@@ -80,10 +80,8 @@ SCRIPT;
                 'filterType'=>GridView::FILTER_SELECT2,
                 'filterInputOptions'=>['placeholder'=>'Any company size'],
                 
-                'filter'=>  array_combine(
-                    array_filter($queryCompanySize),
-                    array_filter($queryCompanySize)
-                ),
+                'filter'=> $queryCompanySize,
+            
                 'format'=>'raw'
             ],
             'address_id',
@@ -171,10 +169,7 @@ SCRIPT;
                 'filterType'=>GridView::FILTER_SELECT2,
                 'filterInputOptions'=>['placeholder'=>'Any status'],
                 
-                'filter'=>  array_combine(
-                    array_filter($queryStatus),
-                    array_filter($queryStatus)
-                ),
+                'filter'=> $queryStatus,
                 'format'=>'raw'
             ],
             [

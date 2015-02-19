@@ -38,6 +38,9 @@ use yii\mongodb\ActiveRecord;
  */
 class Company extends ActiveRecord
 {
+    
+    const ADDRESS = 'address';
+    
     public function behaviors()
     {
         return [
@@ -152,6 +155,11 @@ class Company extends ActiveRecord
         return $this->hasOne(TradeMark::className(), ['_id'=>'tradeMarkId']);
     }
     
+    public function getUserName()
+    {
+        return $this->user->name;
+    }
+    
     /**
      * @inheritdoc
      */
@@ -210,5 +218,68 @@ class Company extends ActiveRecord
             }
         }
         Yii::$app->request->post('Company')[$attribute] = $fieldsForValidation;
+    }
+    
+    public static function dataAutocompleteList($name, $search = null, $id = null)
+    {
+        switch ($name) {
+            default :
+                if (!is_null($search)) {
+                    $data = $name::find()->select(['name'])->where(['like', 'name', $search])->asArray()->limit(20)->all();
+                }
+                if ($id!=null) {
+                    $text = $name::find()->asArray()->where(['_id'=>$id])->one()['name'];
+                }
+                break;
+            case self::ADDRESS:
+                if (!is_null($search)) {
+                    $data = (new Address)->getIdByAddressName($search);
+                }
+                if ($id!=null) {
+                    $text = (new Address)->byAddressIds(array($id));
+                }
+                break;
+        }
+        if (!is_null($search)) {
+            foreach ($data as $key => $value) {
+                $map[$key]['id'] = (string)$value['_id'];
+                $map[$key]['text'] = (string)$value['name'];
+            }
+            $out['results'] = array_values($map);
+        } elseif ($id > 0) {
+            $out['results'] = ['id' => $id, 'text' => $text];
+        } else {
+            $out['results'] = ['id' => 0, 'text' => 'No matching records found'];
+        }
+        return \yii\helpers\Json::encode($out);
+    }
+    
+    public function getStatus()
+    {
+        return [
+            ' '=>'Не указано',
+            'актуальные'=>'актуальные',
+            'закрывшиеся'=>'закрывшиеся',
+            'недозвон 3'=>'недозвон 3',
+            'некорректная информация'=>'некорректная информация',
+            'исчезнувшие'=>'исчезнувшие',
+            'дубль'=>'дубль',
+            'приостановили деятельность'=>'приостановили деятельность',
+            'для МЮ'=>'для МЮ',
+            'ненужные'=>'ненужные',
+            'непонятные'=>'непонятные',
+            'ни с кем не работают'=>'ни с кем не работают',
+        ];
+    }
+    
+    public function getCompanySize()
+    {
+        return [
+            ' ' => 'Не указано',
+            'малая (<50 чел.)' => 'малая (<50 чел.)',
+            'средняя (от 50 чел. до 150 чел.)' => 'средняя (от 50 чел. до 150 чел.)',
+            'крупная (>150 чел.)' => 'крупная (>150 чел.)',
+            
+        ];
     }
 }

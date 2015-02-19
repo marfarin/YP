@@ -89,7 +89,7 @@ class CompanySearch extends Company
             ->andFilterWhere(['user_id' => $this->user_id])
             ->andFilterWhere(['like', 'branch_name', $this->branch_name])
             ->andFilterWhere(['like', 'description', $this->description])
-            ->andFilterWhere(['like', 'status', $this->status])
+            ->andFilterWhere(['status' => $this->status])
             ->andFilterWhere(['wants_placement'=>$this->wants_placement])
             ->andFilterWhere(['export_to_yandex'=>$this->export_to_yandex])
             ->andFilterWhere(['like', 'postcode', $this->postcode])
