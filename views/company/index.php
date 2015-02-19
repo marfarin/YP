@@ -28,9 +28,9 @@ $this->params['breadcrumbs'][] = $this->title;
      
     <?php
         
-        $url = \yii\helpers\Url::to(['list', 'name' => 'category']);
-        $url2 = \yii\helpers\Url::to(['list', 'name' => 'user']);
-        $url3 = \yii\helpers\Url::to(['list', 'name' => 'trademark']);
+        $url = \yii\helpers\Url::to(['list', 'name' => 'Category']);
+        $url2 = \yii\helpers\Url::to(['list', 'name' => 'User']);
+        $url3 = \yii\helpers\Url::to(['list', 'name' => 'TradeMark']);
         $initScript2 = <<< SCRIPT
             function (element, callback) {
                 var id=\$(element).val();

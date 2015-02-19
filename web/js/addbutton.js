@@ -25,7 +25,7 @@ function addButton(element)
     clone.appendTo('#div_'+nameClassAddedFieldLower);
     var settings = $('#form_new_company').data('yiiActiveForm');
     settings.attributes.push({
-        "id":"company-phone_numbers-1","name":"phone_numbers[1]","container":".field-company-phone_numbers-1","input":"#company-phone_numbers-1","enableAjaxValidation":true,"validateOnBlur":false
+        "id":"company-"+nameClassAddedFieldLower+"-"+(parseInt(val)),"name":nameClassAddedFieldLower+"["+(parseInt(val))+"]","container":".field-company-"+nameClassAddedFieldLower+"-"+(parseInt(val)),"input":"#company-"+nameClassAddedFieldLower+"-"+(parseInt(val)),"enableAjaxValidation":true,"validateOnBlur":false, "error":".help-block"
     });
     $('#form_new_company').data('yiiActiveForm', settings);
     jQuery(document).ready(function() {

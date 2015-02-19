@@ -20,13 +20,7 @@ use consultnn\api\Address;
  */
 class CompanyController extends Controller
 {
-    
-    const USER = 'user';
-    const COMPANY = 'company';
-    const CATEGORY = 'category';
     const ADDRESS = 'address';
-    const TRADEMARK = 'trademark';
-    
     
     public function behaviors()
     {
@@ -202,8 +196,20 @@ class CompanyController extends Controller
         $text = '';
         $map = array();
         $out = ['more' => false];
+        $name = "app\models\\".$name;
         switch ($name) {
-            case self::USER:
+            
+            default :
+                
+                if (!is_null($search)) {
+                    $data = $name::find()->select(['name'])->where(['like', 'name', $search])->asArray()->limit(20)->all();
+                }
+                if ($id!=null) {
+                    $text = $name::find()->asArray()->where(['_id'=>$id])->one()['name'];
+                }
+                break;
+            /*case self::USER:
+                $data = $name::find()->select(['name'])->where(['like', 'name', $search])->asArray()->limit(20)->all();
                 if (!is_null($search)) {
                     $data = User::find()->select(['name'])->where(['like', 'name', $search])->asArray()->limit(20)->all();
                 }
@@ -227,6 +233,14 @@ class CompanyController extends Controller
                     $text = TradeMark::find()->asArray()->where(['_id'=>$id])->one()['name'];
                 }
                 break;
+            case self::COMPANY:
+                if (!is_null($search)) {
+                    $data = Company::find()->select(['name'])->where(['like', 'name', $search])->asArray()->limit(20)->all();
+                }
+                if ($id!=null) {
+                    $text = Company::find()->asArray()->where(['_id'=>$id])->one()['name'];
+                }
+                break;*/
             case self::ADDRESS:
                 if (!is_null($search)) {
                     $data = (new Address)->getIdByAddressName($search);
@@ -235,16 +249,7 @@ class CompanyController extends Controller
                     $text = (new Address)->byAddressIds(array($id));
                 }
                 break;
-            case self::COMPANY:
-                if (!is_null($search)) {
-                    $data = Company::find()->select(['name'])->where(['like', 'name', $search])->asArray()->limit(20)->all();
-                }
-                if ($id!=null) {
-                    $text = Company::find()->asArray()->where(['_id'=>$id])->one()['name'];
-                }
-                break;
-            default:
-                break;
+
         }
         if (!is_null($search)) {
             foreach ($data as $key => $value) {
@@ -252,7 +257,6 @@ class CompanyController extends Controller
                 $map[$key]['text'] = (string)$value['name'];
             }
             $out['results'] = array_values($map);
-            
         } elseif ($id > 0) {
             $out['results'] = ['id' => $id, 'text' => $text];
         } else {
