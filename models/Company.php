@@ -180,7 +180,6 @@ class Company extends ActiveRecord
     
     public function validateArrayPhone($attribute, $params)
     {
-        //var_dump($attribute);
         $paramsForValidation = Yii::$app->request->post('Company')[$attribute];
         $validator = new \yii\validators\RegularExpressionValidator(['pattern' => '/^(\+7\(\d{3}\)\d{3}-\d{2}-\d{2};?)*$/']);
         if (!empty($paramsForValidation)) {
@@ -199,7 +198,7 @@ class Company extends ActiveRecord
         if (!empty($fieldsForValidation)) {
             foreach ($fieldsForValidation as $value) {
                 if (!$validator->validate($value, $error)) {
-                    $this->addError($attribute, $error);
+                    $this->addError($attribute.'['.$key.']', $error);
                 }
             }
         }

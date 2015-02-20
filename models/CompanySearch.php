@@ -59,17 +59,15 @@ class CompanySearch extends Company
             // $query->where('0=1');
             return $dataProvider;
         }
-        if($this->parentID && $this->parentID !='' && $this->parentID!=null) {
+        if ($this->parentID && $this->parentID !='' && $this->parentID!=null) {
             $this->parentID = new \MongoId($this->parentID);
         }
-        if($this->user_id && $this->user_id !='' && $this->user_id!=null) {
+        if ($this->user_id && $this->user_id !='' && $this->user_id!=null) {
             $this->user_id = new \MongoId($this->user_id);
         }
-        if($this->tradeMarkId && $this->tradeMarkId !='' && $this->tradeMarkId!=null) {
+        if ($this->tradeMarkId && $this->tradeMarkId !='' && $this->tradeMarkId!=null) {
             $this->tradeMarkId = new \MongoId($this->tradeMarkId);
         }
-        //var_dump($this->parentID);
-        //var_dump(Categories::findCategoryByName($this->category));
         $query->andFilterWhere(['like', '_id', $this->_id])
             ->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'legal_form', $this->legal_form])
@@ -96,7 +94,6 @@ class CompanySearch extends Company
             ->andFilterWhere(['like', 'type', $this->type])
             ->andFilterWhere(['parentID' => $this->parentID])
             ->andFilterWhere(['tradeMarkId'=> $this->tradeMarkId]);
-        //var_dump($dataProvider);
         return $dataProvider;
     }
 }

@@ -28,7 +28,8 @@
         "yiisoft/yii2-jui": "*",
         "kartik-v/yii2-dynagrid": "*",
         "kartik-v/yii2-mpdf": "*",
-        "consultnn/api-client": "*"
+        "consultnn/api-client": "*",
+        "codeception/codeception": "*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",
