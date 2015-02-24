@@ -126,6 +126,22 @@ class CategoryController extends Controller
 
         return $this->redirect(['index']);
     }
+    
+    public function actionTree()
+    {
+        $searchModel = new CategorySearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('tree', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+    
+    public function actionTest($parentId = '', $page = 1, $pageSize = 100)
+    {
+        echo Category::initJsonTree($parentId, $page, $pageSize);
+    }
 
     /**
      * Finds the Categories model based on its primary key value.
@@ -141,17 +157,5 @@ class CategoryController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
-    }
-    
-    
-    public function actionTree()
-    {
-        $searchModel = new CategorySearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('tree', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
     }
 }

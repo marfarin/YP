@@ -63,7 +63,7 @@ class CategorySearch extends Category
             ->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'type', $this->type])
             ->andFilterWhere(['like', 'parentID', $this->parentID])
-            ->andFilterWhere(['in', 'parentID', Categories::findCategoryByName($this->category)]);
+            ->andFilterWhere(['in', 'parentID', Category::findCategoryByName($this->category)]);
         
             //var_dump($dataProvider);
         return $dataProvider;

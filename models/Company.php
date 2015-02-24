@@ -180,15 +180,19 @@ class Company extends ActiveRecord
     
     public function validateArrayPhone($attribute, $params)
     {
+        $count = 0;
         $paramsForValidation = Yii::$app->request->post('Company')[$attribute];
+        //var_dump(Yii::$app->request->post());
         $validator = new \yii\validators\RegularExpressionValidator(['pattern' => '/^(\+7\(\d{3}\)\d{3}-\d{2}-\d{2};?)*$/']);
         if (!empty($paramsForValidation)) {
             foreach ($paramsForValidation as $key => $value) {
                 if (!$validator->validate($value, $error)) {
                     $this->addError($attribute.'['.$key.']', $error);
+                    $count++;
                 }
             }
         }
+        return $count;
     }
     public function validateEmail($attribute, $params)
     {
@@ -196,7 +200,7 @@ class Company extends ActiveRecord
         $validator = new \yii\validators\EmailValidator(['skipOnEmpty' => true,]);
         $fieldsForValidation = array_diff($fieldsForValidation, array(''));
         if (!empty($fieldsForValidation)) {
-            foreach ($fieldsForValidation as $value) {
+            foreach ($fieldsForValidation as $key => $value) {
                 if (!$validator->validate($value, $error)) {
                     $this->addError($attribute.'['.$key.']', $error);
                 }
@@ -210,7 +214,7 @@ class Company extends ActiveRecord
         $validator = new \yii\validators\UrlValidator(['skipOnEmpty' => true,]);
         $fieldsForValidation = array_diff($fieldsForValidation, array(''));
         if (!empty($fieldsForValidation)) {
-            foreach ($fieldsForValidation as $key=>$value) {
+            foreach ($fieldsForValidation as $key => $value) {
                 if (!$validator->validate($value, $error)) {
                     $this->addError($attribute.'['.$key.']', $error);
                 }
